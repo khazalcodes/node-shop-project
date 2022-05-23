@@ -26,16 +26,20 @@ function fetchAll(callback) {
 
 
 function readDb(callback) {
+	let products = []
+
 	fs.readFile(db, (readError, fileContent) => {
 		if (readError) {
 			console.log(readError);
-			return callback([]);
+			return callback(products);
 		}
 		
 		try {				
-			return callback(JSON.parse(fileContent));
+			products = JSON.parse(fileContent);
 		} catch(parseError) {
 			console.log(parseError);
 		}
+
+		return callback(products);
 	});
 }

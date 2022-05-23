@@ -23,10 +23,10 @@ function cart(req, res, next) {
 function products(req, res, next) {
 	productsRepository.fetchAll((products) => {
 		res.render('shop/products', {
-			products: products, 
 			docTitle: 'Shop',
+			hasProducts: products.length > 0,
 			path: "/shop/products",
-			hasProducts: products.length > 0
+			products: products, 
 		});
 	});
 }
