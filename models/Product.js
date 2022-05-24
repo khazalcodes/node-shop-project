@@ -1,5 +1,6 @@
 module.exports = class Product {
-	constructor(title, imageUrl, description, price) {
+	constructor(id, title, imageUrl, description, price) {
+		this.id = id;
 		this.title = title;
 		this.imageUrl = imageUrl;
 		this.description = description;

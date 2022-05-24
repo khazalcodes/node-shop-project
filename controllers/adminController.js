@@ -16,12 +16,13 @@ function getAddProduct(req, res, next) {
 }
 
 function postAddProduct(req, res, next) {
-	productsRepository.saveProduct(new Product(
-		req.body.title,
-		req.body.imageUrl,
-		req.body.description,
-		req.body.price
-	)); 
+	const title =  req.body.title;
+	const imageUrl =  req.body.imageUrl;
+	const description =  req.body.description;
+	const price =  req.body.price;
+	const id =  Math.random().toString();
+	
+	productsRepository.saveProduct(new Product(id, title, imageUrl, description, price)); 
 
 	res.redirect('/');
 }	

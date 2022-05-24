@@ -10,14 +10,14 @@ block content
 				each product in products
 					article.card.product-item
 						header.card__header
-							h1.product__title #{product.title}
-							
+							h1.product__title #{product.title}							
 						.card__image
 							img(src=product.imageUrl alt="A Book")
 						.card__content
 							h2.product__price $#{product.price}
 							p.product__description #{product.description}
 						.card__actions
+							a(href=`/shop/product-details/${product.id}` class="btn") Details 
 							form(action="/shop/add-to-cart", method="post") 
 								button.btn(type="submit") Add to Cart
 		else
