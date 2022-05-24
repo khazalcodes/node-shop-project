@@ -11,22 +11,10 @@ html(lang="en")
 		block styles
 
 	body
-		header.main-header
-			nav.main-header__nav
-				ul.main-header__item-list
-					li.main-header__item
-						a(href="/shop" class=(path === '/shop' ? 'active' : '')) Shop 
-
-					li.main-header__item
-						a(href="/shop/products" class=(path === '/shop/products' ? 'active' : '')) Products 
-
-					li.main-header__item
-						a(href="/shop/cart" class=(path === '/shop/cart' ? 'active' : '')) Cart 
-
-					li.main-header__item
-						a(href="/admin/add-product" class=(path === '/admin/add-product' ? 'active' : '')) Add Product
-
-					li.main-header__item
-						a(href="/admin/products-overview" class=(path === '/admin/products-overview' ? 'active' : '')) Admin products 
+		include ../partials/navigation.pug
 		
 		block content
+
+		
+		script(src="/js/main.js") 
+	

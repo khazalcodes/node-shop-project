@@ -8,4 +8,7 @@ router.get("/", shopController.index);
 
 router.get("/cart", shopController.cart);
 
+router.get("/orders", shopController.orders);
+
 router.get("/products", shopController.products);
+

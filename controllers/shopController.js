@@ -3,6 +3,7 @@ const productsRepository = require('../data/repositories/productsRepository');
 module.exports = {
 	cart,
 	index,
+	orders,
 	products,
 }
 
@@ -17,6 +18,13 @@ function cart(req, res, next) {
 	res.render('shop/cart', {
 		docTitle: 'Cart',
 		path: "/shop/cart",
+	})
+}
+
+function orders(req, res, next) {
+	res.render('shop/orders', {
+		docTitle: 'Your Orders',
+		path: "/shop/orders",
 	})
 }
 
