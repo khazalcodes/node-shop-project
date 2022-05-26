@@ -12,3 +12,7 @@ router.get("/orders", shopController.orders);
 
 router.get("/products", shopController.products);
 
+router.get("/product-details/:id", shopController.productDetails)
+
+router.post("/add-to-cart", shopController.addProductToCart)
+

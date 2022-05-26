@@ -18,7 +18,6 @@ block content
 							p.product__description #{product.description}
 						.card__actions
 							a(href=`/shop/product-details/${product.id}` class="btn") Details 
-							form(action="/shop/add-to-cart", method="post") 
-								button.btn(type="submit") Add to Cart
+							include ../partials/add-to-cart
 		else
 			h1 No prods baby

@@ -1,6 +1,5 @@
 const productsRepository = require('../data/repositories/productsRepository');
-const Product = require('../models/Product');
-const { products } = require('./shopController');
+const productFactory = require('../models/factories/productFactory');
 
 module.exports = {
 	getAddProduct,
@@ -16,13 +15,7 @@ function getAddProduct(req, res, next) {
 }
 
 function postAddProduct(req, res, next) {
-	const title =  req.body.title;
-	const imageUrl =  req.body.imageUrl;
-	const description =  req.body.description;
-	const price =  req.body.price;
-	const id =  Math.random().toString();
-	
-	productsRepository.saveProduct(new Product(id, title, imageUrl, description, price)); 
+	productsRepository.saveProduct(productFactory.createProduct(req)); 
 
 	res.redirect('/');
 }	
