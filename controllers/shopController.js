@@ -1,5 +1,6 @@
 const productsRepository = require('../data/repositories/productsRepository');
 const Cart = require('../models/Cart');
+const productsService = require("../services/productsService");
 
 module.exports = {
 	cart,
@@ -10,39 +11,37 @@ module.exports = {
 	productDetails,
 }
 
-function index(req, res, next) {
+function index(req, res) {
 	res.render('shop/index', {
 		docTitle: 'Shop',
 		path: "/shop",
 	})
 }
 
-function cart(req, res, next) {
+function cart(req, res) {
 	res.render('shop/cart', {
 		docTitle: 'Cart',
 		path: "/shop/cart",
 	})
 }
 
-function orders(req, res, next) {
+function orders(req, res) {
 	res.render('shop/orders', {
 		docTitle: 'Your Orders',
 		path: "/shop/orders",
 	})
 }
 
-function products(req, res, next) {
-	productsRepository.fetchAll((products) => {
-		res.render('shop/products', {
-			docTitle: 'Shop',
-			hasProducts: products.length > 0,
-			path: "/shop/products",
-			products: products, 
-		});
+function products(req, res) {
+	const docTitle = 'Shop';
+	const path = '/shop/products';
+
+	productsService.createProductsOverviewViewModel(docTitle, path, (viewModel) => {
+		res.render('shop/products', viewModel);
 	});
 }
 
-function addProductToCart(req, res, next) {
+function addProductToCart(req, res) {
 	const productId = req.body.productId;
 	const title = req.body.title;
 	const price= req.body.price;
@@ -51,7 +50,7 @@ function addProductToCart(req, res, next) {
 	res.redirect('/');
 }
 
-function productDetails(req, res, next) {
+function productDetails(req, res) {
 	const id = req.params.id
 	productsRepository.findById(id, (product) => {
 		res.render('shop/product-details', {
