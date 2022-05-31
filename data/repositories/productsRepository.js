@@ -8,6 +8,7 @@ module.exports = {
 	fetchAll,
 	findById,
 	saveProduct,
+	updateProduct,
 }
 
 function fetchAll(callback) {
@@ -44,6 +45,17 @@ function saveProduct (product) {
 	readData(products => {
 		products.push(product);
 	
+		fs.writeFile(db, JSON.stringify(products), (err) => {
+			console.log(err);
+		})
+	});
+}
+
+function updateProduct (product) {
+	readData(products => {
+		// Implement error/sad path
+		products[product.id] = product;
+
 		fs.writeFile(db, JSON.stringify(products), (err) => {
 			console.log(err);
 		})

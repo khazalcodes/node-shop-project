@@ -1,20 +1,25 @@
 const productsRepository = require('../data/repositories/productsRepository');
 const productFactory = require('../models/factories/productFactory');
 const productsService = require('../services/productsService');
+const { ProductInfoFormViewModel } = require("../viewmodels/ProductInfoFormViewModel");
 
 module.exports = {
 	getAddProduct,
 	postAddProduct,
-	getEditProduct,
-	postEditProduct,
+	getEditProductForm: getEditProductForm,
+	postEditProductForm,
 	productsOverview,
 }
 
 function getAddProduct(req, res) {
-	res.render('admin/product-info-form', {
-		docTitle: 'Add a product', 
-		path: '/admin/add-product'
-	});
+	const viewModel = new ProductInfoFormViewModel();
+
+	viewModel.docTitle = 'Add a product';
+	viewModel.path = 'admin/add-product';
+	viewModel.submitButtonText = 'Add Product';
+	viewModel.postPath = viewModel.path;
+
+	res.render('admin/product-info-form', viewModel);
 }
 
 function postAddProduct(req, res) {
@@ -23,22 +28,25 @@ function postAddProduct(req, res) {
 	res.redirect('/');
 }
 
-function getEditProduct(req, res) {
-	const editMode = req.query.edit
+function getEditProductForm(req, res) {
+	const productViewModel = productsService.createProductViewModel(req.query)
+	const viewModel = new ProductInfoFormViewModel();
 
-	if (editMode !== "true") {
-		return res.redirect('/');
-	}
+	viewModel.docTitle = 'Edit Product';
+	viewModel.path = '/admin/edit-product';
+	viewModel.submitButtonText = 'Update details'
+	viewModel.postPath = viewModel.path
+	viewModel.product = productViewModel;
 
-	res.render('admin/product-info-form', {
-		docTitle: 'Edit product',
-		path: '/admin/edit-product',
-		editMode: editMode
-	});
+	res.render('admin/product-info-form', viewModel);
 }
 
-function postEditProduct(req, res) {
-	productsRepository.saveProduct(productFactory.createProduct(req));
+function postEditProductForm(req, res) {
+	console.log(req.body)
+	productsRepository.findById(req.body.id, product => {
+
+	})
+	productsRepository.updateProduct();
 
 	res.redirect('/');
 }

@@ -1,4 +1,4 @@
-module.exports = class productsOverviewViewModel {
+exports.ProductsOverviewViewModel = class {
     docTitle = '';
     path = '';
     products = {};
