@@ -8,8 +8,18 @@ module.exports = {
 	deleteProduct,
 	fetchAll,
 	findById,
-	saveProduct,
-	updateProduct,
+	addProduct,
+	editProduct,
+}
+
+function addProduct (product) {
+	readData(products => {
+		products.push(product);
+
+		fs.writeFile(db, JSON.stringify(products), (err) => {
+			console.log(err);
+		})
+	});
 }
 
 function deleteProduct(id) {
@@ -20,6 +30,22 @@ function deleteProduct(id) {
 			console.log(err);
 		})
 	})
+}
+
+function editProduct (viewModel) {
+	readData(products => {
+		// Implement error/sad path
+		const product = products.find(p => p.id === viewModel.id);
+
+		product.title = viewModel.title;
+		product.imageUrl = viewModel.imageUrl;
+		product.description = viewModel.description;
+		product.price = viewModel.price;
+
+		fs.writeFile(db, JSON.stringify(products), (err) => {
+			console.log(err);
+		})
+	});
 }
 
 function fetchAll(callback) {
@@ -52,28 +78,4 @@ function readData(callback) {
 	});
 }
 
-function saveProduct (product) {
-	readData(products => {
-		products.push(product);
-	
-		fs.writeFile(db, JSON.stringify(products), (err) => {
-			console.log(err);
-		})
-	});
-}
 
-function updateProduct (viewModel) {
-	readData(products => {
-		// Implement error/sad path
-		const product = products.find(p => p.id === viewModel.id);
-
-		product.title = viewModel.title;
-		product.imageUrl = viewModel.imageUrl;
-		product.description = viewModel.description;
-		product.price = viewModel.price;
-
-		fs.writeFile(db, JSON.stringify(products), (err) => {
-			console.log(err);
-		})
-	});
-}

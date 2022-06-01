@@ -30,7 +30,7 @@ function getAddProduct(req, res) {
 }
 
 function postAddProduct(req, res) {
-	productsRepository.saveProduct(productsService.createNewProduct(req));
+	productsRepository.addProduct(productsService.createNewProduct(req));
 	res.redirect('/');
 }
 
@@ -48,7 +48,7 @@ function getEditProductForm(req, res) {
 }
 
 function postEditProductForm(req, res) {
-	productsRepository.updateProduct(productsService.createProductViewModel(req.body))
+	productsRepository.editProduct(productsService.createProductViewModel(req.body))
 	res.redirect('/');
 }
 
