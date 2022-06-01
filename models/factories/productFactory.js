@@ -1,10 +1,10 @@
 const Product = require("../Product");
 
 module.exports = {
-	createProduct,
+	createNewProduct,
 }
 
-function createProduct(request) {
+function createNewProduct(request) {
 	const title =  request.body.title;
 	const imageUrl =  request.body.imageUrl;
 	const description =  request.body.description;

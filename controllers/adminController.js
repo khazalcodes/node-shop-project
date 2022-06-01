@@ -23,8 +23,7 @@ function getAddProduct(req, res) {
 }
 
 function postAddProduct(req, res) {
-	productsRepository.saveProduct(productFactory.createProduct(req)); 
-
+	productsRepository.saveProduct(productFactory.createNewProduct(req));
 	res.redirect('/');
 }
 
@@ -42,14 +41,10 @@ function getEditProductForm(req, res) {
 }
 
 function postEditProductForm(req, res) {
-	console.log(req.body)
-	productsRepository.findById(req.body.id, product => {
-
-	})
-	productsRepository.updateProduct();
-
+	productsRepository.updateProduct(productsService.createProductViewModel(req.body))
 	res.redirect('/');
 }
+
 
 function productsOverview(req, res) {
 	const docTitle = "Admin | Products overview";

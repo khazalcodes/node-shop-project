@@ -51,10 +51,15 @@ function saveProduct (product) {
 	});
 }
 
-function updateProduct (product) {
+function updateProduct (viewModel) {
 	readData(products => {
 		// Implement error/sad path
-		products[product.id] = product;
+		const product = products.find(p => p.id === viewModel.id);
+
+		product.title = viewModel.title;
+		product.imageUrl = viewModel.imageUrl;
+		product.description = viewModel.description;
+		product.price = viewModel.price;
 
 		fs.writeFile(db, JSON.stringify(products), (err) => {
 			console.log(err);
