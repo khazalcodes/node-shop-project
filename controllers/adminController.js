@@ -1,5 +1,4 @@
 const productsRepository = require('../data/repositories/productsRepository');
-const productFactory = require('../models/factories/productFactory');
 const productsService = require('../services/productsService');
 const { ProductInfoFormViewModel } = require("../viewmodels/ProductInfoFormViewModel");
 
@@ -15,7 +14,7 @@ function getAddProduct(req, res) {
 	const viewModel = new ProductInfoFormViewModel();
 
 	viewModel.docTitle = 'Add a product';
-	viewModel.path = 'admin/add-product';
+	viewModel.path = '/admin/add-product';
 	viewModel.submitButtonText = 'Add Product';
 	viewModel.postPath = viewModel.path;
 
@@ -23,7 +22,8 @@ function getAddProduct(req, res) {
 }
 
 function postAddProduct(req, res) {
-	productsRepository.saveProduct(productFactory.createNewProduct(req));
+	console.log('we outchea');
+	productsRepository.saveProduct(productsService.createNewProduct(req));
 	res.redirect('/');
 }
 

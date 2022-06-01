@@ -1,10 +1,22 @@
 const productsRepository = require('../data/repositories/productsRepository');
 const { ProductsOverviewViewModel } = require('../viewmodels/ProductsOverviewViewModel');
 const { ProductViewModel } = require("../viewmodels/ProductViewModel");
+const Product = require("../models/Product");
 
 module.exports = {
+    createNewProduct,
     createProductsOverviewViewModel,
     createProductViewModel,
+}
+
+function createNewProduct(request) {
+    const title =  request.body.title;
+    const imageUrl =  request.body.imageUrl;
+    const description =  request.body.description;
+    const price =  request.body.price;
+    const id =  Math.random().toString();
+
+    return new Product(id, title, imageUrl, description, price);
 }
 
 function createProductsOverviewViewModel(docTitle, path, callback) {
