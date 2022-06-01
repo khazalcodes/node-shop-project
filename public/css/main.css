@@ -191,10 +191,19 @@ form {
   cursor: pointer;
 }
 
+.btn-warning {
+  color: #920000;
+}
+
 .btn:hover,
 .btn:active {
   background-color: #00695c;
   color: white;
+}
+
+.btn-warning:hover,
+.btn-warning:active {
+  background-color: #920000;
 }
 
 @media (min-width: 768px) {

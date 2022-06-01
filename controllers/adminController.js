@@ -3,11 +3,19 @@ const productsService = require('../services/productsService');
 const { ProductInfoFormViewModel } = require("../viewmodels/ProductInfoFormViewModel");
 
 module.exports = {
+	deleteProduct,
 	getAddProduct,
 	postAddProduct,
 	getEditProductForm: getEditProductForm,
 	postEditProductForm,
 	productsOverview,
+}
+
+function deleteProduct(req, res) {
+	const id = req.body.id;
+
+	productsRepository.deleteProduct(id);
+	res.redirect('/');
 }
 
 function getAddProduct(req, res) {
@@ -22,7 +30,6 @@ function getAddProduct(req, res) {
 }
 
 function postAddProduct(req, res) {
-	console.log('we outchea');
 	productsRepository.saveProduct(productsService.createNewProduct(req));
 	res.redirect('/');
 }

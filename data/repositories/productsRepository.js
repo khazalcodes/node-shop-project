@@ -5,10 +5,21 @@ const rootDirectory = require('../../utils/root-directory');
 const db = path.join(rootDirectory, 'data', 'products.json');
 
 module.exports = {
+	deleteProduct,
 	fetchAll,
 	findById,
 	saveProduct,
 	updateProduct,
+}
+
+function deleteProduct(id) {
+	readData(products => {
+		const newProducts = products.filter(p => p.id !== id)
+
+		fs.writeFile(db, JSON.stringify(newProducts), (err) => {
+			console.log(err);
+		})
+	})
 }
 
 function fetchAll(callback) {
