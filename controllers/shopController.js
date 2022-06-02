@@ -1,5 +1,5 @@
 const productsRepository = require('../data/repositories/productsRepository');
-const Cart = require('../models/Cart');
+const cartRepository = require('../data/repositories/cartRepository');
 const productsService = require("../services/productsService");
 
 module.exports = {
@@ -46,7 +46,7 @@ function addProductToCart(req, res) {
 	const title = req.body.title;
 	const price= req.body.price;
 
-	Cart.addProduct(productId, title, price);
+	cartRepository.addProduct(productId, title, price);
 	res.redirect('/');
 }
 
