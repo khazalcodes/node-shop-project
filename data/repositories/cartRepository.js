@@ -30,22 +30,20 @@ function addProduct(productId, title, price) {
     });
 }
 
-function removeProduct(productId, id) {
-    console.log('DUCKYOUBITCH')
-    console.log(id);
-    // readData(cart => {
-    //     let product = cart.products[productId];
-    //
-    //     if (product === undefined) {
-    //         return;
-    //     }
-    //
-    //     cart.totalPrice -= product.price * product.quantity;
-    //
-    //     delete cart.products.id;
-    //     console.log(cart);
-    //     fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
-    // })
+function removeProduct(id) {
+    readData(cart => {
+        let product = cart.products[id];
+
+        if (product === undefined) {
+            return;
+        }
+
+        cart.totalPrice -= product.price * product.quantity;
+
+        delete cart.products.id;
+        console.log(cart);
+        fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
+    })
 }
 
 function readData(callback) {

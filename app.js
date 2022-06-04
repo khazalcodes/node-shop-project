@@ -6,7 +6,7 @@ const rootDirectory = require('./utils/root-directory');
 
 const shopRouter = require('./routers/shopRouter');
 const adminRouter = require('./routers/adminRouter');
-const productsHub = require("./hubs/productsHub");
+const productsHub = require("./pub-sub-messaging/hubs/productsHub");
 
 const app = express();
 

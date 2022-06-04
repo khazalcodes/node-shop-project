@@ -1,23 +1,22 @@
 const PubSub = require('pubsub-js');
-const {removeProduct} = require("../data/repositories/cartRepository");
+const cartSubscriber = require("../subs/cartSubscriber");
 
 const UPDATE_PRODUCT = Symbol('updateProduct');
 const DELETE_PRODUCT = Symbol('deleteProduct');
 
 module.exports = {
     bindSubscribers,
-    publishDeletedProduct,
+    publishDeletProductEvent,
     publishUpdatedProduct,
 }
 
 const eventSubscriberList = {
-    [DELETE_PRODUCT]: [removeProduct],
-    [UPDATE_PRODUCT]: [removeProduct],
+    [DELETE_PRODUCT]: [cartSubscriber.handleDeleteProductEvent],
+    [UPDATE_PRODUCT]: [cartSubscriber.handleDeleteProductEvent],
 }
 
 function bindSubscribers() {
     const eventSymbols = Object.getOwnPropertySymbols(eventSubscriberList)
-    console.log(eventSymbols)
 
     eventSymbols.map(eventSymbol => {
         eventSubscriberList[eventSymbol]
@@ -25,7 +24,7 @@ function bindSubscribers() {
     })
 }
 
-function publishDeletedProduct(id) {
+function publishDeletProductEvent(id) {
     PubSub.publish(DELETE_PRODUCT, id);
 }
 
