@@ -17,7 +17,10 @@ block content
 							h2.product__price $#{product.price}
 							p.product__description #{product.description}
 						.card__actions
-							a(href=`/shop/product-details/${product.id}` class="btn") Details 
+							form.button-form(action='/shop/product-details', method="get")
+								button.btn(type="submit") Details
+								include ../partials/product-viewmodel-values
+
 							include ../partials/add-to-cart
 		else
 			h1 No prods baby

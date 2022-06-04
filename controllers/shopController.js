@@ -1,6 +1,6 @@
-const productsRepository = require('../data/repositories/productsRepository');
 const cartRepository = require('../data/repositories/cartRepository');
 const productsService = require("../services/productsService");
+const {ProductDetailsViewModel} = require("../viewmodels/ProductDetailsViewModel");
 
 module.exports = {
 	cart,
@@ -51,12 +51,12 @@ function addProductToCart(req, res) {
 }
 
 function productDetails(req, res) {
-	const id = req.params.id
-	productsRepository.findById(id, (product) => {
-		res.render('shop/product-details', {
-			docTitle: `${product.title} | Overview`,
-			path: '/shop/product-details',
-			product: product,			
-		})
-	});
+	const productViewModel = productsService.createProductViewModel(req.query);
+	const viewModel = new ProductDetailsViewModel()
+
+	viewModel.product = productViewModel;
+	viewModel.docTitle = `${viewModel.product.title} | Overview`;
+	viewModel.path = '/shop/product-details';
+
+	res.render('shop/product-details', viewModel);
 }
