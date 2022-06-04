@@ -1,6 +1,7 @@
 const cartRepository = require('../data/repositories/cartRepository');
 const productsService = require("../services/productsService");
 const {ProductDetailsViewModel} = require("../viewmodels/ProductDetailsViewModel");
+const cartService = require("../services/cartService");
 
 module.exports = {
 	cart,
@@ -42,11 +43,9 @@ function products(req, res) {
 }
 
 function addProductToCart(req, res) {
-	const productId = req.body.productId;
-	const title = req.body.title;
-	const price= req.body.price;
-
-	cartRepository.addProduct(productId, title, price);
+	const product = req.body;
+	const cartProductEntry = cartService.createCartProductEntry(product);
+	cartRepository.addProduct(cartProductEntry);
 	res.redirect('/');
 }
 

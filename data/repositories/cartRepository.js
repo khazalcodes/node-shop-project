@@ -10,21 +10,21 @@ module.exports = {
 }
 
 // why does using .productId not work properly?
-function addProduct(productId, title, price) {
+function addProduct(productEntry) {
     readData(cart => {
-        price = parseInt(price);
+        const productId = productEntry.productId;
 
         if (productId in cart.products) {
             cart.products[productId].quantity += 1;
         } else {
             cart.products[productId] = {
-                title: title,
-                price: price,
+                title: productEntry.title,
+                price: productEntry.price,
                 quantity: 1
             }
         }
 
-        cart.totalPrice += price;
+        cart.totalPrice += productEntry.price;
         console.log(cart);
         fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
     });
@@ -40,7 +40,7 @@ function removeProduct(id) {
 
         cart.totalPrice -= product.price * product.quantity;
 
-        delete cart.products.id;
+        delete cart.products[id];
         console.log(cart);
         fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
     })

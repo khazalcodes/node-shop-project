@@ -10,13 +10,14 @@ module.exports = {
 }
 
 function createNewProduct(request) {
-    const title =  request.body.title;
-    const imageUrl =  request.body.imageUrl;
-    const description =  request.body.description;
-    const price =  request.body.price;
-    const id =  Math.random().toString();
+    const product = new Product();
+    product.title =  request.body.title;
+    product.imageUrl =  request.body.imageUrl;
+    product.description =  request.body.description;
+    product.price =  request.body.price;
+    product.id =  Math.random().toString();
 
-    return new Product(id, title, imageUrl, description, price);
+    return product;
 }
 
 function createProductsOverviewViewModel(docTitle, path, callback) {
