@@ -50,7 +50,7 @@ function createProductViewModel(product) {
     viewModel.title = product.title;
     viewModel.imageUrl = product.imageUrl;
     viewModel.description = product.description;
-    viewModel.price = product.price
+    viewModel.price =  parseFloat(product.price)
 
     return viewModel;
 }
