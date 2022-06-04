@@ -1,6 +1,7 @@
 const productsRepository = require('../data/repositories/productsRepository');
 const productsService = require('../services/productsService');
 const { ProductInfoFormViewModel } = require("../viewmodels/ProductInfoFormViewModel");
+const productsHub = require("../hubs/productsHub");
 
 module.exports = {
 	deleteProduct,
@@ -56,6 +57,8 @@ function postEditProductForm(req, res) {
 function productsOverview(req, res) {
 	const docTitle = "Admin | Products overview";
 	const path = "/admin/products-overview";
+
+	productsHub.publishDeletedProduct('22233444');
 
 	productsService.createProductsOverviewViewModel(docTitle, path, (viewModel) => {
 		res.render('admin/products-overview', viewModel);

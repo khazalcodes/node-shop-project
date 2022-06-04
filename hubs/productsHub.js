@@ -1,14 +1,34 @@
-const CREATE_EVENT = Symbol("create");
-const READ_EVENT = Symbol("read");
-const UPDATE_EVENT = Symbol("update");
-const DELETE_EVENT = Symbol("delete")
+const PubSub = require('pubsub-js');
+const {removeProduct} = require("../data/repositories/cartRepository");
 
-// have references to the various objects that want to sub
-const subscribers = {};
+const UPDATE_PRODUCT = Symbol('updateProduct');
+const DELETE_PRODUCT = Symbol('deleteProduct');
 
+module.exports = {
+    bindSubscribers,
+    publishDeletedProduct,
+    publishUpdatedProduct,
+}
+
+const eventSubscriberList = {
+    [DELETE_PRODUCT]: [removeProduct],
+    [UPDATE_PRODUCT]: [removeProduct],
+}
+
+function bindSubscribers() {
+    const eventSymbols = Object.getOwnPropertySymbols(eventSubscriberList)
+    console.log(eventSymbols)
+
+    eventSymbols.map(eventSymbol => {
+        eventSubscriberList[eventSymbol]
+            .map(subscriber => PubSub.subscribe(eventSymbol, subscriber));
+    })
+}
+
+function publishDeletedProduct(id) {
+    PubSub.publish(DELETE_PRODUCT, id);
+}
 
 function publishUpdatedProduct(updatedProduct) {
-    // get a handle on all the update subs
-    // loop over them sending them messages one by one
-    // send them messages
+    PubSub.publish(UPDATE_PRODUCT, updatedProduct);
 }
