@@ -5,4 +5,10 @@ block styles
 
 block content
 	main
-		h1 OMG look at all this stuff :p 
+		if hasProductEntries
+			ul
+				each productEntry in productEntries
+					li #{productEntry.title} - (#{productEntry.quantity})
+
+			h2 Total price - #{totalPrice}
+

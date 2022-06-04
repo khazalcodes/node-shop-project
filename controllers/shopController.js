@@ -20,9 +20,11 @@ function index(req, res) {
 }
 
 function cart(req, res) {
-	res.render('shop/cart', {
-		docTitle: 'Cart',
-		path: "/shop/cart",
+	const docTitle = 'Cart Overview';
+	const path = "/shop/cart";
+
+	cartService.createCartOverviewViewModel(docTitle, path, (viewModel) => {
+		res.render('shop/cart', viewModel);
 	})
 }
 
@@ -44,7 +46,7 @@ function products(req, res) {
 
 function addProductToCart(req, res) {
 	const product = req.body;
-	const cartProductEntry = cartService.createCartProductEntry(product);
+	const cartProductEntry = cartService.createProductEntry(product);
 	cartRepository.addProduct(cartProductEntry);
 	res.redirect('/');
 }

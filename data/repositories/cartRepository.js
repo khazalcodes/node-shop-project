@@ -7,9 +7,13 @@ const cartFile = path.join(rootDirectory, 'data', 'cart.json')
 module.exports = {
     addProduct,
     removeProduct,
+    fetchCart,
 }
 
-// why does using .productId not work properly?
+function fetchCart(callback) {
+    readData(callback);
+}
+
 function addProduct(productEntry) {
     readData(cart => {
         const productId = productEntry.productId;
@@ -45,6 +49,7 @@ function removeProduct(id) {
         fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
     })
 }
+
 
 function readData(callback) {
 
