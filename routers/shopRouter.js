@@ -7,6 +7,7 @@ module.exports = router;
 router.get("/", shopController.index);
 
 router.get("/cart", shopController.cart);
+router.post("/cart/remove-product", shopController.removeProductFromCart);
 
 router.get("/orders", shopController.orders);
 

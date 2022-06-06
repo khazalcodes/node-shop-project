@@ -9,6 +9,7 @@ module.exports = {
 	orders,
 	products,
 	addProductToCart,
+	removeProductFromCart,
 	productDetails,
 }
 
@@ -49,6 +50,12 @@ function addProductToCart(req, res) {
 	const cartProductEntry = cartService.createProductEntry(product);
 	cartRepository.addProduct(cartProductEntry);
 	res.redirect('/');
+}
+
+function removeProductFromCart(req, res) {
+	const id = req.body.id;
+	cartRepository.removeProduct(id);
+	res.redirect('/shop/cart');
 }
 
 function productDetails(req, res) {

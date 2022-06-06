@@ -29,7 +29,6 @@ function addProduct(productEntry) {
         }
 
         cart.totalPrice += productEntry.price;
-        console.log(cart);
         fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
     });
 }
