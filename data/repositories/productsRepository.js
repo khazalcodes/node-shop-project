@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const rootDirectory = require('../../utils/root-directory');
+const {rootDirectory} = require("../../utils/root-directory");
 
 const db = path.join(rootDirectory, 'data', 'products.json');
 

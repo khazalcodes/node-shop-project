@@ -2,11 +2,11 @@ const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const rootDirectory = require('./utils/root-directory');
 
 const shopRouter = require('./routers/shopRouter');
 const adminRouter = require('./routers/adminRouter');
 const productsHub = require("./pub-sub-messaging/hubs/productsHub");
+const {rootDirectory} = require("./utils/root-directory");
 
 const app = express();
 

@@ -1,1 +1,1 @@
-module.exports = require.main.path;
+exports.rootDirectory = require.main.path;
