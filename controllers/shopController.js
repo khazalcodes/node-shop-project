@@ -40,9 +40,9 @@ function products(req, res) {
 	const docTitle = 'Shop';
 	const path = '/shop/products';
 
-	productsService.createProductsOverviewViewModel(docTitle, path, (viewModel) => {
-		res.render('shop/products', viewModel);
-	});
+	productsService.createProductsOverviewViewModel(docTitle, path)
+		.then(viewModel => res.render('shop/products', viewModel))
+		.catch(err => console.log(err))
 }
 
 function addProductToCart(req, res) {

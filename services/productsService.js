@@ -20,17 +20,20 @@ function createNewProduct(request) {
     return product;
 }
 
-function createProductsOverviewViewModel(docTitle, path, callback) {
-    productsRepository.fetchAll((products) => {
-        const viewModel = new ProductsOverviewViewModel();
+function createProductsOverviewViewModel(docTitle, path) {
+    return productsRepository.fetchAll()
+        .then(products => {
+            const viewModel = new ProductsOverviewViewModel();
+            console.log('shumblacalksnlsakjdf')
+            viewModel.docTitle = docTitle;
+            viewModel.path = path;
+            viewModel.products = convertProductsToProductViewModels(products);
+            viewModel.hasProducts = products.length > 0;
 
-        viewModel.docTitle = docTitle;
-        viewModel.path = path;
-        viewModel.products = convertProductsToProductViewModels(products);
-        viewModel.hasProducts = products.length > 0;
-
-        return callback(viewModel);
-    })
+            console.log(viewModel)
+            return viewModel;
+        })
+        .catch(err => console.log(err));
 }
 
 function convertProductsToProductViewModels(products) {

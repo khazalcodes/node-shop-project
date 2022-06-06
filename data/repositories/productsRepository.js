@@ -1,8 +1,6 @@
 const fs = require('fs');
-const path = require('path');
-const {rootDirectory} = require("../../utils/root-directory");
+const {db} = require('../../utils/database');
 
-const db = path.join(rootDirectory, 'data', 'products.json');
 
 module.exports = {
 	deleteProduct,
@@ -48,8 +46,10 @@ function editProduct (viewModel) {
 	});
 }
 
-function fetchAll(callback) {
-	readData(callback);
+function fetchAll() {
+	return db.execute('SELECT * FROM products')
+		.then(([rows, _]) => rows)
+		.catch(err => console.log(err))
 }
 
 function findById(id, callback) {
@@ -67,8 +67,8 @@ function readData(callback) {
 			console.log(readError);
 			return callback(products);
 		}
-		
-		try {				
+
+		try {
 			products = JSON.parse(fileContent);
 		} catch(parseError) {
 			console.log(parseError);
