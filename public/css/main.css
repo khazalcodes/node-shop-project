@@ -8,11 +8,13 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Open Sans', sans-serif;
+  background-color: #131720 ;
 }
 
 main {
   padding: 1rem;
   margin: auto;
+  color: #E4E4E4;
 }
 
 form {
@@ -146,7 +148,10 @@ form {
 }
 
 .card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0);
+  border-radius: 10px;
+  background-color: #1E2533;
+  color: #E4E4E4;
 }
 
 .card__header,
@@ -180,30 +185,41 @@ form {
 }
 
 .btn {
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
   display: inline-block;
   padding: 0.25rem 1rem;
   text-decoration: none;
   font: inherit;
-  border: 1px solid #00695c;
-  color: #00695c;
-  background: white;
+  border: none;
+  color: #E4E4E4;
+  background: rgba(76, 150, 140, 0.73);;
   border-radius: 3px;
   cursor: pointer;
 }
 
 .btn-warning {
-  color: #920000;
+  background-color: rgba(248, 121, 121, 0.53);
+}
+
+.btn-info {
+  background-color: rgba(90, 155, 231, 0.53);
 }
 
 .btn:hover,
 .btn:active {
   background-color: #00695c;
   color: white;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
 }
 
 .btn-warning:hover,
 .btn-warning:active {
   background-color: #920000;
+}
+
+.btn-info:hover,
+.btn-info:active {
+  background-color: rgb(32, 71, 124);
 }
 
 @media (min-width: 768px) {

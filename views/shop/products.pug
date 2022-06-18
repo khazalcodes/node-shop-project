@@ -18,7 +18,7 @@ block content
 							p.product__description #{product.description}
 						.card__actions
 							form.button-form(action='/shop/product-details', method="get")
-								button.btn(type="submit") Details
+								button.btn.btn-info(type="submit") Details
 								include ../partials/product-viewmodel-values
 
 							include ../partials/add-to-cart

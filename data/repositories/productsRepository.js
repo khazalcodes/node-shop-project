@@ -1,5 +1,3 @@
-const fs = require('fs');
-const {db} = require('../../utils/database');
 const {PrismaClient} = require('@prisma/client')
 
 const prismaClient = new PrismaClient()
@@ -25,12 +23,10 @@ function addProduct (product) {
 }
 
 function deleteProduct(id) {
-	readData(products => {
-		const newProducts = products.filter(p => p.id !== id)
-
-		fs.writeFile(db, JSON.stringify(newProducts), (err) => {
-			console.log(err);
-		})
+	return prismaClient.product.delete({
+		where: {
+			id: id
+		}
 	})
 }
 
@@ -53,24 +49,3 @@ function editProduct (product) {
 function fetchAll() {
 	return prismaClient.product.findMany()
 }
-
-function readData(callback) {
-	let products = []
-
-	fs.readFile(db, (readError, fileContent) => {
-		if (readError) {
-			console.log(readError);
-			return callback(products);
-		}
-
-		try {
-			products = JSON.parse(fileContent);
-		} catch(parseError) {
-			console.log(parseError);
-		}
-
-		return callback(products);
-	});
-}
-
-

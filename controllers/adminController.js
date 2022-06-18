@@ -13,11 +13,14 @@ module.exports = {
 }
 
 function deleteProduct(req, res) {
-	const id = req.body.id;
+	const id = parseInt(req.body.id);
 
-	productsRepository.deleteProduct(id);
-	productsHub.publishDeletProductEvent(id)
-	res.redirect('/');
+	productsRepository.deleteProduct(id)
+		.then(() => {
+			productsHub.publishDeletProductEvent(id);
+			res.redirect('/');
+		})
+		.catch(err => console.log(err));
 }
 
 function getAddProduct(req, res) {
