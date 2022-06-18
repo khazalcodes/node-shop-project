@@ -7,7 +7,6 @@ const prismaClient = new PrismaClient()
 module.exports = {
 	deleteProduct,
 	fetchAll,
-	findById,
 	addProduct,
 	editProduct,
 }
@@ -35,37 +34,24 @@ function deleteProduct(id) {
 	})
 }
 
-function editProduct (viewModel) {
-	readData(products => {
-		// Implement error/sad path
-		const product = products.find(p => p.id === viewModel.id);
-
-		product.title = viewModel.title;
-		product.imageUrl = viewModel.imageUrl;
-		product.description = viewModel.description;
-		product.price = viewModel.price;
-
-		fs.writeFile(db, JSON.stringify(products), (err) => {
-			console.log(err);
-		})
-	});
+function editProduct (product) {
+	return prismaClient.product.update({
+		where: {
+			id: product.id
+		},
+		data: {
+			title: product.title,
+			price: product.price,
+			imageUrl: product.imageUrl,
+			description: product.description,
+			orders: {},
+			carts: {},
+		}
+	})
 }
-
-// function fetchAll() {
-// 	return db.execute('SELECT * FROM products')
-// 		.then(([rows, _]) => rows)
-// 		.catch(err => console.log(err))
-// }
 
 function fetchAll() {
 	return prismaClient.product.findMany()
-}
-
-function findById(id, callback) {
-	readData(products => {
-		const product = products.find(p => p.id === id);
-		callback(product);
-	})
 }
 
 function readData(callback) {

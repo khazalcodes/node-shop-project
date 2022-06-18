@@ -48,7 +48,7 @@ function convertProductsToProductViewModels(products) {
 function createProductViewModel(product) {
     const viewModel = new ProductViewModel()
 
-    viewModel.id = product.id;
+    viewModel.id = parseInt(product.id);
     viewModel.title = product.title;
     viewModel.imageUrl = product.imageUrl;
     viewModel.description = product.description;

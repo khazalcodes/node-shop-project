@@ -52,7 +52,8 @@ function getEditProductForm(req, res) {
 
 function postEditProductForm(req, res) {
 	productsRepository.editProduct(productsService.createProductViewModel(req.body))
-	res.redirect('/');
+		.then(() => res.redirect('/'))
+		.catch(err => console.log(err));
 }
 
 
@@ -60,7 +61,7 @@ function productsOverview(req, res) {
 	const docTitle = "Admin | Products overview";
 	const path = "/admin/products-overview";
 
-	productsService.createProductsOverviewViewModel(docTitle, path, (viewModel) => {
-		res.render('admin/products-overview', viewModel);
-	});
+	productsService.createProductsOverviewViewModel(docTitle, path)
+		.then(viewModel => res.render('admin/products-overview', viewModel))
+		.catch(err => console.log(err))
 }
