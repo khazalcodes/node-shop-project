@@ -24,13 +24,11 @@ function createProductsOverviewViewModel(docTitle, path) {
     return productsRepository.fetchAll()
         .then(products => {
             const viewModel = new ProductsOverviewViewModel();
-            console.log('shumblacalksnlsakjdf')
             viewModel.docTitle = docTitle;
             viewModel.path = path;
             viewModel.products = convertProductsToProductViewModels(products);
             viewModel.hasProducts = products.length > 0;
 
-            console.log(viewModel)
             return viewModel;
         })
         .catch(err => console.log(err));

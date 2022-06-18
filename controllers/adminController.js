@@ -32,8 +32,9 @@ function getAddProduct(req, res) {
 }
 
 function postAddProduct(req, res) {
-	productsRepository.addProduct(productsService.createNewProduct(req));
-	res.redirect('/');
+	productsRepository.addProduct(productsService.createNewProduct(req))
+		.then(() => res.redirect('/'))
+		.catch(err => console.log(err));
 }
 
 function getEditProductForm(req, res) {
