@@ -11,11 +11,12 @@ module.exports = {
 
 function createNewProduct(request) {
     const product = new Product();
+
     product.title =  request.body.title;
     product.imageUrl =  request.body.imageUrl;
     product.description =  request.body.description;
-    product.price =  request.body.price;
-    product.id =  Math.random().toString();
+    product.price =  parseFloat(request.body.price);
+    product.authorId = request.app.get('user').id;
 
     return product;
 }

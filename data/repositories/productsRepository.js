@@ -9,20 +9,21 @@ module.exports = {
 	editProduct,
 }
 
-function addProduct (product) {
+async function addProduct (product) {
 	return prismaClient.product.create({
 		data: {
 			title: product.title,
 			price: product.price,
 			imageUrl: product.imageUrl,
 			description: product.description,
+			authorId: product.authorId,
 			orders: {},
 			carts: {},
 		}
 	})
 }
 
-function deleteProduct(id) {
+async function deleteProduct(id) {
 	return prismaClient.product.delete({
 		where: {
 			id: id
@@ -30,7 +31,7 @@ function deleteProduct(id) {
 	})
 }
 
-function editProduct (product) {
+async function editProduct (product) {
 	return prismaClient.product.update({
 		where: {
 			id: product.id
@@ -46,6 +47,6 @@ function editProduct (product) {
 	})
 }
 
-function fetchAll() {
+async function fetchAll() {
 	return prismaClient.product.findMany()
 }

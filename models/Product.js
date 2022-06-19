@@ -4,4 +4,5 @@ module.exports = class Product {
 	imageUrl = '';
 	description = '';
 	price = 0.01;
+	authorId = {};
 }
