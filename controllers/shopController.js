@@ -2,6 +2,7 @@ const cartRepository = require('../data/repositories/cartRepository');
 const productsService = require("../services/productsService");
 const {ProductDetailsViewModel} = require("../viewmodels/ProductDetailsViewModel");
 const cartService = require("../services/cartService");
+const {default: to} = require('await-to-js');
 
 module.exports = {
 	cart,
@@ -36,13 +37,20 @@ function orders(req, res) {
 	})
 }
 
-function products(req, res) {
+async function products(req, res) {
 	const docTitle = 'Shop';
 	const path = '/shop/products';
+	const userId = req.app.get('user').id
 
-	productsService.createProductsOverviewViewModel(docTitle, path)
-		.then(viewModel => res.render('shop/products', viewModel))
-		.catch(err => console.log(err))
+	let err, viewModel;
+	[err, viewModel] = await to(productsService.createUserProductsOverviewViewModel(docTitle, path, userId));
+
+	if (err) {
+		console.log(err);
+		return res.redirect('/500');
+	}
+
+	res.render('shop/products', viewModel)
 }
 
 function addProductToCart(req, res) {

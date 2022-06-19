@@ -2,6 +2,7 @@ const productsRepository = require('../data/repositories/productsRepository');
 const productsService = require('../services/productsService');
 const { ProductInfoFormViewModel } = require("../viewmodels/ProductInfoFormViewModel");
 const productsHub = require("../pub-sub-messaging/hubs/productsHub");
+const to = require('await-to-js').default;
 
 module.exports = {
 	deleteProduct,
@@ -60,11 +61,18 @@ function postEditProductForm(req, res) {
 }
 
 
-function productsOverview(req, res) {
+async function productsOverview(req, res) {
 	const docTitle = "Admin | Products overview";
 	const path = "/admin/products-overview";
+	const userId = req.app.get('user').id
 
-	productsService.createProductsOverviewViewModel(docTitle, path)
-		.then(viewModel => res.render('admin/products-overview', viewModel))
-		.catch(err => console.log(err))
+	let err, viewModel;
+	[err, viewModel] = await to(productsService.createUserProductsOverviewViewModel(docTitle, path, userId));
+
+	if (err) {
+		console.log(err);
+		return res.redirect('/500');
+	}
+
+	res.render('admin/products-overview', viewModel);
 }

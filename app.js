@@ -33,10 +33,12 @@ app.use('/shop', shopRouter);
 
 app.use('/admin', adminRouter);
 
+app.get('/500', (req, res) => {
+	res.status(500).render('500', {docTitle: 'An error has occurred!'})
+});
+
 app.use((req, res) => {
-	res
-		.status(404)
-		.render('404', {docTitle: "Page not found"})
+	res.status(404).render('404', {docTitle: "Page not found"})
 })
 
 app.listen(3000);

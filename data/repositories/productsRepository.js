@@ -3,10 +3,11 @@ const {PrismaClient} = require('@prisma/client')
 const prismaClient = new PrismaClient()
 
 module.exports = {
-	deleteProduct,
-	fetchAll,
 	addProduct,
+	deleteProduct,
 	editProduct,
+	fetchAll,
+	fetchAllUserProducts,
 }
 
 async function addProduct (product) {
@@ -49,4 +50,12 @@ async function editProduct (product) {
 
 async function fetchAll() {
 	return prismaClient.product.findMany()
+}
+
+async function fetchAllUserProducts(userId) {
+	return prismaClient.product.findMany({
+		where: {
+			authorId: userId
+		}
+	})
 }
