@@ -3,11 +3,11 @@ const cartRepository = require("../data/repositories/cartRepository");
 const {CartOverviewViewModel} = require("../viewmodels/CartOverviewViewModel");
 
 module.exports = {
-    createProductEntry,
+    createCartLine,
     createCartOverviewViewModel,
 }
 
-function createProductEntry(product) {
+function createCartLine(product) {
     const cartProductEntry = new CartProductEntry();
 
     cartProductEntry.productId = product.id;

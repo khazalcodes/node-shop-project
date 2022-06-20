@@ -55,7 +55,7 @@ async function products(req, res) {
 
 function addProductToCart(req, res) {
 	const product = req.body;
-	const cartProductEntry = cartService.createProductEntry(product);
+	const cartProductEntry = cartService.createCartLine(product);
 	cartRepository.addProduct(cartProductEntry);
 	res.redirect('/');
 }
