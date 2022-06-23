@@ -1,71 +1,78 @@
-const fs = require('fs');
-const path = require('path');
-const {rootDirectory} = require("../../utils/root-directory");
+const {PrismaClient} = require('@prisma/client')
+const to = require('await-to-js').default;
 
-const cartFile = path.join(rootDirectory, 'data', 'cart.json')
+
+
+const prismaClient = new PrismaClient({
+    rejectOnNotFound: true
+})
 
 module.exports = {
-    addProduct,
-    removeProduct,
-    fetchCart,
+    fetchCartLine,
+    addProductToCart,
 }
 
-function fetchCart(callback) {
-    readData(callback);
-}
-
-function addProduct(productEntry) {
-    readData(cart => {
-        const productId = productEntry.productId;
-
-        if (productId in cart.products) {
-            cart.products[productId].quantity += 1;
-        } else {
-            cart.products[productId] = {
-                title: productEntry.title,
-                price: productEntry.price,
-                quantity: 1
+async function addProductToCart(cartId, productId) {
+    const cartLine = await prismaClient.cart.update({
+        where: {
+            id: cartId
+        },
+        data: {
+            cartLines: {
+                upsert: {
+                    where: {
+                        cartId_productId: {
+                            cartId: cartId,
+                            productId: productId
+                        }
+                    },
+                    create: {
+                        productId: productId,
+                        quantity: 1
+                    },
+                    update: {
+                        productId: productId,
+                        quantity: { increment: 1 }
+                    }
+                }
             }
         }
+    })
 
-        cart.totalPrice += productEntry.price;
-        fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
-    });
+    return cartLine;
 }
 
-function removeProduct(id) {
-    readData(cart => {
-        let product = cart.products[id];
-
-        if (product === undefined) {
-            return;
-        }
-
-        cart.totalPrice -= product.price * product.quantity;
-
-        delete cart.products[id];
-        console.log(cart);
-        fs.writeFile(cartFile, JSON.stringify(cart), err => console.log(err))
+async function fetchCart(cartId) {
+    const cart = await prismaClient.cart.findUnique({
+        where: { id: cartId },
+        include: { cartLines: { include: { product: true } } }
     })
 }
 
+async function fetchCartLine(cartId, productId) {
+    let err, cartLine;
 
-function readData(callback) {
+    [err, cartLine] = await to(prismaClient.cartline.findUnique({
+        where: {
+            cartId: cartId,
+            productId: productId
+        },
+    }))
 
-    fs.readFile(cartFile, (readError, fileContent) => {
-        let cart = { products: {}, totalPrice: 0 };
+    if (err) {
+        console.log(err);
+        cartLine = undefined //await _createCartLine(cartId, productId);
+    }
 
-        if (readError) {
-            console.log(readError);
-            return callback(cart);
+    return cartLine
+}
+
+async function _createCartLine(cartId, productId) {
+    return await prismaClient.cartline.create({
+        data: {
+            cartId: cartId,
+            productId: productId,
+            quantity: 0
         }
-
-        try {
-            cart = JSON.parse(fileContent);
-        } catch (e) {
-            console.log(e);
-        }
-
-        return callback(cart);
     })
 }

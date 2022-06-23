@@ -19,7 +19,7 @@ async function addProduct (product) {
 			description: product.description,
 			authorId: product.authorId,
 			orders: {},
-			carts: {},
+			cartLines: {},
 		}
 	})
 }

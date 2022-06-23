@@ -25,9 +25,8 @@ function cart(req, res) {
 	const docTitle = 'Cart Overview';
 	const path = "/shop/cart";
 
-	cartService.createCartOverviewViewModel(docTitle, path, (viewModel) => {
-		res.render('shop/cart', viewModel);
-	})
+	const viewModel = cartService.createCartOverviewViewModel(docTitle, path);
+	res.render('shop/cart', viewModel);
 }
 
 function orders(req, res) {
@@ -54,9 +53,10 @@ async function products(req, res) {
 }
 
 function addProductToCart(req, res) {
-	const product = req.body;
-	const cartProductEntry = cartService.createCartLine(product);
-	cartRepository.addProduct(cartProductEntry);
+	const cartId = parseInt(req.app.get('user').cart.id) ;
+	const productId = parseInt(req.body.id);
+
+	cartRepository.addProductToCart(cartId, productId);
 	res.redirect('/');
 }
 

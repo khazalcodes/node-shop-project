@@ -1,32 +1,17 @@
 const {CartProductEntry} = require("../models/ProductEntry");
 const cartRepository = require("../data/repositories/cartRepository");
 const {CartOverviewViewModel} = require("../viewmodels/CartOverviewViewModel");
+const {CartLineViewModel} = require("../viewmodels/CartLineViewModel");
 
 module.exports = {
-    createCartLine,
     createCartOverviewViewModel,
 }
 
-function createCartLine(product) {
-    const cartProductEntry = new CartProductEntry();
+async function createCartOverviewViewModel(docTitle, path) {
+    const viewModel = new CartOverviewViewModel();
 
-    cartProductEntry.productId = product.id;
-    cartProductEntry.title = product.title;
-    cartProductEntry.price = parseFloat(product.price);
+    viewModel.docTitle = docTitle
+    viewModel.path = path;
 
-    return cartProductEntry;
-}
-
-function createCartOverviewViewModel(docTitle, path, callback) {
-    cartRepository.fetchCart((cart) => {
-        const viewModel = new CartOverviewViewModel();
-
-        viewModel.docTitle = docTitle;
-        viewModel.path = path;
-        viewModel.productEntries = cart.products;
-        viewModel.hasProductEntries = Object.keys(viewModel.productEntries).length > 0;
-        viewModel.totalPrice = cart.totalPrice;
-
-        return callback(viewModel);
-    })
+    return viewModel;
 }

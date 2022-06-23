@@ -15,7 +15,7 @@ module.exports = {
 async function getRootUser() {
     let err, user;
 
-    [err, user]= await to(getUser(parseInt(process.env.ROOT_USER_ID)))
+    [err, user] = await to(getUser(parseInt(process.env.ROOT_USER_ID)))
 
     if (err) {
         console.log(err);
@@ -29,6 +29,9 @@ async function getUser(id) {
     return prismaClient.user.findUnique({
         where: {
             id: id
+        },
+        include: {
+            cart: true
         }
     });
 }

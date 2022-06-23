@@ -51,7 +51,6 @@ model Order {
 
 model Cart {
   id          Int       @id @default(autoincrement())
-  totalPrice  Decimal   @default(0.00) @db.Decimal(65,2)
 
   cartLines   CartLine[]
 
@@ -63,15 +62,15 @@ model Cart {
 }
 
 model CartLine {
-  id          Int       @id @default(autoincrement())
-  price       Decimal   @default(0.00) @db.Decimal(65,2)
+  cart        Cart      @relation(fields: [cartId], references: [id])
+  cartId      Int
 
   product     Product   @relation(fields: [productId], references: [id])
   productId   Int
-  Quantity    Int
 
-  cart        Cart      @relation(fields: [cartId], references: [id])
-  cartId      Int
+  quantity    Int
+
+  @@id([cartId, productId])
 
   createdAt   DateTime @default(now()) @db.Timestamp(6)
   updatedAt   DateTime @updatedAt @db.Timestamp(6)
