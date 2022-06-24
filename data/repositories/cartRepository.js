@@ -8,12 +8,12 @@ const prismaClient = new PrismaClient({
 })
 
 module.exports = {
-    fetchCartLine,
+    fetchCart,
     addProductToCart,
 }
 
 async function addProductToCart(cartId, productId) {
-    const cartLine = await prismaClient.cart.update({
+    const cart = await prismaClient.cart.update({
         where: {
             id: cartId
         },
@@ -39,14 +39,28 @@ async function addProductToCart(cartId, productId) {
         }
     })
 
-    return cartLine;
+    return cart;
 }
 
 async function fetchCart(cartId) {
-    const cart = await prismaClient.cart.findUnique({
+    let err, cart;
+    [err, cart] = await to(prismaClient.cart.findUnique({
         where: { id: cartId },
-        include: { cartLines: { include: { product: true } } }
-    })
+        include: {
+            cartLines: {
+                include: {
+                    product: true
+                }
+            }
+        }
+    }));
+
+    if (err) {
+        console.log(err);
+        return undefined;
+    }
+
+    return cart;
 }
 
 async function fetchCartLine(cartId, productId) {
@@ -65,14 +79,4 @@ async function fetchCartLine(cartId, productId) {
     }
 
     return cartLine
-}
-
-async function _createCartLine(cartId, productId) {
-    return await prismaClient.cartline.create({
-        data: {
-            cartId: cartId,
-            productId: productId,
-            quantity: 0
-        }
-    })
 }

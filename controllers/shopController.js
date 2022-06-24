@@ -21,11 +21,11 @@ function index(req, res) {
 	})
 }
 
-function cart(req, res) {
-	const docTitle = 'Cart Overview';
-	const path = "/shop/cart";
+async function cart(req, res) {
+	const cartId = req.app.get('user').cart.id
+	const cart = await cartRepository.fetchCart(cartId)
 
-	const viewModel = cartService.createCartOverviewViewModel(docTitle, path);
+	const viewModel = cartService.createCartOverviewViewModel(cart);
 	res.render('shop/cart', viewModel);
 }
 

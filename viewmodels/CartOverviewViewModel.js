@@ -1,7 +1,7 @@
 exports.CartOverviewViewModel = class {
-    docTitle = '';
-    path = '';
-    productEntries = {};
-    hasProductEntries = false;
+    docTitle = 'Cart Overview';
+    path = 'shop/cart';
+    cartLines = {};
+    hasCartLines = false;
     totalPrice = 0.01
 }
