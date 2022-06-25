@@ -53,8 +53,6 @@ async function editProduct (product) {
 			price: product.price,
 			imageUrl: product.imageUrl,
 			description: product.description,
-			orders: {},
-			carts: {},
 		}
 	})
 }

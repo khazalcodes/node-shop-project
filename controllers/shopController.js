@@ -1,8 +1,8 @@
 const cartRepository = require('../data/repositories/cartRepository');
-const productsService = require("../services/productsService");
-const {ProductDetailsViewModel} = require("../viewmodels/ProductDetailsViewModel");
 const cartService = require("../services/cartService");
-const {default: to} = require('await-to-js');
+const productsService = require("../services/productsService");
+
+const {ProductDetailsViewModel} = require("../viewmodels/ProductDetailsViewModel");
 
 module.exports = {
 	cart,
@@ -41,28 +41,22 @@ async function products(req, res) {
 	const path = '/shop/products';
 	const userId = req.app.get('user').id
 
-	let err, viewModel;
-	[err, viewModel] = await to(productsService.createUserProductsOverviewViewModel(docTitle, path, userId));
-
-	if (err) {
-		console.log(err);
-		return res.redirect('/500');
-	}
+	const viewModel = productsService.createUserProductsOverviewViewModel(docTitle, path, userId)
 
 	res.render('shop/products', viewModel)
 }
 
-function addProductToCart(req, res) {
+async function addProductToCart(req, res) {
 	const cartId = parseInt(req.app.get('user').cart.id) ;
 	const productId = parseInt(req.body.id);
 
-	cartRepository.addProductToCart(cartId, productId);
+	await cartRepository.addProductToCart(cartId, productId);
 	res.redirect('/');
 }
 
-function removeProductFromCart(req, res) {
+async function removeProductFromCart(req, res) {
 	const id = req.body.id;
-	cartRepository.removeProduct(id);
+	await cartRepository.removeProduct(id);
 	res.redirect('/shop/cart');
 }
 

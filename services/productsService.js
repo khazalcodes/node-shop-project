@@ -1,59 +1,79 @@
 const productsRepository = require('../data/repositories/productsRepository');
-const { ProductsOverviewViewModel } = require('../viewmodels/ProductsOverviewViewModel');
-const { ProductViewModel } = require("../viewmodels/ProductViewModel");
-const Product = require("../models/Product");
-const to = require('await-to-js').default;
+const {ProductsOverviewViewModel} = require('../viewmodels/ProductsOverviewViewModel');
+const {ProductViewModel} = require("../viewmodels/ProductViewModel");
+const {ProductInfoFormViewModel} = require('../viewmodels/ProductInfoFormViewModel');
 
 module.exports = {
-    createNewProduct,
+    createNewProductViewModel,
     createProductViewModel,
-    createProductsOverviewViewModel,
+    createAddProductFormViewModel,
+    createEditProductFormViewModel,
     createUserProductsOverviewViewModel,
 }
 
-function createNewProduct(request) {
-    const product = new Product();
+function createNewProductViewModel(rawProductInfo, authorId) {
+    const viewModel = new ProductViewModel();
 
-    product.title =  request.body.title;
-    product.imageUrl =  request.body.imageUrl;
-    product.description =  request.body.description;
-    product.price =  parseFloat(request.body.price);
-    product.authorId = request.app.get('user').id;
+    viewModel.title =  rawProductInfo.title;
+    viewModel.imageUrl =  rawProductInfo.imageUrl;
+    viewModel.description =  rawProductInfo.description;
+    viewModel.price =  parseFloat(rawProductInfo.price);
+    viewModel.authorId = authorId;
 
-    return product;
-}
-
-function createProductsOverviewViewModel(docTitle, path) {
-    return productsRepository.fetchAll()
-        .then(products => {
-            const viewModel = new ProductsOverviewViewModel();
-            viewModel.docTitle = docTitle;
-            viewModel.path = path;
-            viewModel.products = convertProductsToProductViewModels(products);
-            viewModel.hasProducts = products.length > 0;
-
-            return viewModel;
-        })
-        .catch(err => console.log(err));
+    return viewModel;
 }
 
 async function createUserProductsOverviewViewModel(docTitle, path, userId) {
-    let err, products;
-    [err, products] = await to(productsRepository.fetchAllUserProducts(userId));
-
-    if (err) return err;
-
+    const products = await productsRepository.fetchAllUserProducts(userId);
     const viewModel = new ProductsOverviewViewModel();
 
     viewModel.docTitle = docTitle;
     viewModel.path = path;
-    viewModel.products = convertProductsToProductViewModels(products);
+    viewModel.products = _convertProductsToProductViewModels(products);
     viewModel.hasProducts = products.length > 0;
 
     return viewModel;
 }
 
-function convertProductsToProductViewModels(products) {
+function createAddProductFormViewModel() {
+    const viewModel = new ProductInfoFormViewModel();
+
+    viewModel.docTitle = 'Add a product';
+    viewModel.path = '/admin/add-product';
+    viewModel.submitButtonText = 'Add Product';
+    viewModel.postPath = viewModel.path;
+
+    return viewModel
+}
+
+function createEditProductFormViewModel(product) {
+    const productViewModel = createProductViewModel(product)
+    const viewModel = new ProductInfoFormViewModel();
+
+    viewModel.product = productViewModel;
+
+    viewModel.docTitle = 'Edit Product';
+    viewModel.path = '/admin/edit-product';
+    viewModel.submitButtonText = 'Update details'
+    viewModel.postPath = viewModel.path
+
+    return viewModel
+}
+
+function createProductViewModel(rawProductInfo) {
+    const viewModel = new ProductViewModel()
+
+    viewModel.id = parseInt(rawProductInfo.id);
+    viewModel.title = rawProductInfo.title;
+    viewModel.imageUrl = rawProductInfo.imageUrl;
+    viewModel.description = rawProductInfo.description;
+    viewModel.price =  parseFloat(rawProductInfo.price);
+    viewModel.authorId = rawProductInfo.authorId;
+
+    return viewModel;
+}
+
+function _convertProductsToProductViewModels(products) {
     const productViewModels = {};
 
     products.forEach(p => {
@@ -62,17 +82,4 @@ function convertProductsToProductViewModels(products) {
     })
 
     return productViewModels;
-}
-
-function createProductViewModel(product) {
-    const viewModel = new ProductViewModel()
-
-    viewModel.id = parseInt(product.id);
-    viewModel.title = product.title;
-    viewModel.imageUrl = product.imageUrl;
-    viewModel.description = product.description;
-    viewModel.price =  parseFloat(product.price);
-    viewModel.authorId = product.authorId;
-
-    return viewModel;
 }
