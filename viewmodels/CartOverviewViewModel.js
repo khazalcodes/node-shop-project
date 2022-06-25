@@ -3,5 +3,5 @@ exports.CartOverviewViewModel = class {
     path = 'shop/cart';
     cartLines = {};
     hasCartLines = false;
-    totalPrice = 0.01
+    sumTotal = 0.01
 }

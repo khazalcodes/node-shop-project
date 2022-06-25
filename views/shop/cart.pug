@@ -6,14 +6,14 @@ block styles
 
 block content
 	main
-		if hasProductEntries
+		if hasCartLines
 			ul
-				each productEntry, id in productEntries
+				each cartLine, id in cartLines
 					li
-						p #{productEntry.title}: (#{productEntry.quantity})
+						p #{cartLine.productTitle}: (#{cartLine.quantity} x $#{cartLine.unitPrice}) $#{cartLine.totalPrice}
 						form.button-form(action='/shop/cart/remove-product', method='post')
 							button.btn.btn-warning(type='submit') Remove from Cart
 							input(type='hidden' name='id' value=id)
 
-			h2 Total price: #{totalPrice}
+			h2 Total price: #{sumTotal}
 
