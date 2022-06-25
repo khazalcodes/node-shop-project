@@ -1,7 +1,6 @@
 const productsRepository = require('../data/repositories/productsRepository');
 const productsService = require('../services/productsService');
 const { ProductInfoFormViewModel } = require("../viewmodels/ProductInfoFormViewModel");
-const productsHub = require("../pub-sub-messaging/hubs/productsHub");
 const to = require('await-to-js').default;
 
 module.exports = {
@@ -13,15 +12,10 @@ module.exports = {
 	productsOverview,
 }
 
-function deleteProduct(req, res) {
+async function deleteProduct(req, res) {
 	const id = parseInt(req.body.id);
-
-	productsRepository.deleteProduct(id)
-		.then(() => {
-			productsHub.publishDeletProductEvent(id);
-			res.redirect('/');
-		})
-		.catch(err => console.log(err));
+	await productsRepository.deleteProduct(id);
+	res.redirect('/');
 }
 
 function getAddProduct(req, res) {

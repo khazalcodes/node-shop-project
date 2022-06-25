@@ -8,16 +8,15 @@ module.exports = {
 function createCartOverviewViewModel(cart) {
     const viewModel = new CartOverviewViewModel();
 
-    const cartLineViewModels = convertCartLinesToCartLineViewModels(cart.cartLines);
+    const cartLineViewModels = _convertCartLinesToCartLineViewModels(cart.cartLines);
 
     viewModel.cartLines = cartLineViewModels;
     viewModel.hasCartLines = cart.cartLines.length > 0;
-    viewModel.sumTotal = Object.values(cartLineViewModels).reduce(((x, { totalPrice }) => x + totalPrice), 0.0);
-
+    viewModel.sumTotal = _sumCartLineViewModelsTotalPrices(cartLineViewModels);
     return viewModel;
 }
 
-function convertCartLinesToCartLineViewModels(cartLines) {
+function _convertCartLinesToCartLineViewModels(cartLines) {
     const cartLineViewModels = {}
 
     cartLines.forEach(cl => {
@@ -39,4 +38,11 @@ function convertCartLinesToCartLineViewModels(cartLines) {
     })
 
     return cartLineViewModels;
+}
+
+function _sumCartLineViewModelsTotalPrices(cartLineViewModels) {
+    return Object
+        .values(cartLineViewModels)
+        .reduce(((x, { totalPrice }) => x + totalPrice), 0.0)
+        .toFixed(2);
 }

@@ -8,19 +8,20 @@ datasource db {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)
-  price       Decimal  @default(0.00) @db.Decimal(65, 2)
-  imageUrl    String   @default("https://picsum.photos/320/320") @db.VarChar(255)
-  description String   @db.Text
+  id          Int        @id @default(autoincrement())
+  title       String     @db.VarChar(255)
+  price       Decimal    @default(0.00) @db.Decimal(65, 2)
+  imageUrl    String     @default("https://picsum.photos/320/320") @db.VarChar(255)
+  description String     @db.Text
 
-  author      User?     @relation(fields: [authorId], references: [id])
+  author      User?      @relation(fields: [authorId], references: [id])
   authorId    Int?
   orders      Order[]
+
   cartLines   CartLine[]
 
-  createdAt   DateTime @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @updatedAt @db.Timestamp(6)
 }
 
 model User {
@@ -62,10 +63,10 @@ model Cart {
 }
 
 model CartLine {
-  cart        Cart      @relation(fields: [cartId], references: [id])
+  cart        Cart      @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId      Int
 
-  product     Product   @relation(fields: [productId], references: [id])
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId   Int
 
   quantity    Int

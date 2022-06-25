@@ -6,7 +6,7 @@ const DELETE_PRODUCT = Symbol('deleteProduct');
 
 module.exports = {
     bindSubscribers,
-    publishDeletProductEvent,
+    publishDeleteProductEvent,
     publishUpdatedProduct,
 }
 
@@ -24,7 +24,7 @@ function bindSubscribers() {
     })
 }
 
-function publishDeletProductEvent(id) {
+function publishDeleteProductEvent(id) {
     PubSub.publish(DELETE_PRODUCT, id);
 }
 
