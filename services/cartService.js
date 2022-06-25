@@ -24,9 +24,6 @@ function _convertCartLinesToCartLineViewModels(cartLines) {
         const price = cl.product.price;
         const quantity = cl.quantity;
 
-        console.log(price)
-        console.log(quantity)
-
         viewModel.cartId = cl.cartId;
         viewModel.quantity = cl.quantity;
         viewModel.productId = cl.product.id;

@@ -10,6 +10,7 @@ const prismaClient = new PrismaClient({
 module.exports = {
     fetchCart,
     addProductToCart,
+    removeProductFromCart
 }
 
 async function addProductToCart(cartId, productId) {
@@ -42,6 +43,25 @@ async function addProductToCart(cartId, productId) {
     return cart;
 }
 
+async function removeProductFromCart(cartId, productId) {
+    let err, cart;
+    [err, cart] =  await to(prismaClient.cartLine.delete({
+        where: {
+            cartId_productId: {
+                cartId: cartId,
+                productId: productId
+            }
+        }
+    }));
+
+    if (err) {
+        console.log(err);
+        return undefined
+    }
+
+    return cart;
+}
+
 async function fetchCart(cartId) {
     let err, cart;
     [err, cart] = await to(prismaClient.cart.findUnique({
@@ -61,22 +81,4 @@ async function fetchCart(cartId) {
     }
 
     return cart;
-}
-
-async function fetchCartLine(cartId, productId) {
-    let err, cartLine;
-
-    [err, cartLine] = await to(prismaClient.cartline.findUnique({
-        where: {
-            cartId: cartId,
-            productId: productId
-        },
-    }))
-
-    if (err) {
-        console.log(err);
-        cartLine = undefined //await _createCartLine(cartId, productId);
-    }
-
-    return cartLine
 }

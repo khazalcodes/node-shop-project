@@ -1,11 +1,12 @@
-const productsRepository = require('../data/repositories/productsRepository');
 const {ProductsOverviewViewModel} = require('../viewmodels/ProductsOverviewViewModel');
 const {ProductViewModel} = require("../viewmodels/ProductViewModel");
 const {ProductInfoFormViewModel} = require('../viewmodels/ProductInfoFormViewModel');
+const {ProductDetailsViewModel} = require('../viewmodels/ProductDetailsViewModel');
 
 module.exports = {
     createNewProductViewModel,
     createProductViewModel,
+    createProductDetailsViewModel,
     createAddProductFormViewModel,
     createEditProductFormViewModel,
     createUserProductsOverviewViewModel,
@@ -23,9 +24,9 @@ function createNewProductViewModel(rawProductInfo, authorId) {
     return viewModel;
 }
 
-async function createUserProductsOverviewViewModel(docTitle, path, userId) {
-    const products = await productsRepository.fetchAllUserProducts(userId);
+function createUserProductsOverviewViewModel(docTitle, path, products) {
     const viewModel = new ProductsOverviewViewModel();
+
 
     viewModel.docTitle = docTitle;
     viewModel.path = path;
@@ -71,6 +72,17 @@ function createProductViewModel(rawProductInfo) {
     viewModel.authorId = rawProductInfo.authorId;
 
     return viewModel;
+}
+
+function createProductDetailsViewModel(rawProductInfo) {
+    const productViewModel = createProductViewModel(rawProductInfo);
+    const viewModel = new ProductDetailsViewModel()
+
+    viewModel.product = productViewModel;
+    viewModel.docTitle = `${viewModel.product.title} | Overview`;
+    viewModel.path = '/shop/product-details';
+
+    return viewModel
 }
 
 function _convertProductsToProductViewModels(products) {

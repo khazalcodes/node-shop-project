@@ -37,13 +37,13 @@ async function postEditProductForm(req, res) {
 	res.redirect('/')
 }
 
-
 async function productsOverview(req, res) {
 	const docTitle = "Admin | Products overview";
 	const path = "/admin/products-overview";
 	const userId = req.app.get('user').id
 
-	const viewModel = productsService.createUserProductsOverviewViewModel(docTitle, path, userId)
+	const products = await productsRepository.fetchAllUserProducts(userId);
+	const viewModel = productsService.createUserProductsOverviewViewModel(docTitle, path, products)
 
 	res.render('admin/products-overview', viewModel);
 }

@@ -13,7 +13,8 @@ block content
 						p #{cartLine.productTitle}: (#{cartLine.quantity} x $#{cartLine.unitPrice}) $#{cartLine.totalPrice}
 						form.button-form(action='/shop/cart/remove-product', method='post')
 							button.btn.btn-warning(type='submit') Remove from Cart
-							input(type='hidden' name='id' value=id)
+							input(type='hidden' name='cartId' value=cartLine.cartId)
+							input(type='hidden' name='productId' value=cartLine.productId)
 
-			h2 Total price: #{sumTotal}
+		h2 Total price: #{sumTotal}
 

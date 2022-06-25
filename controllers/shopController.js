@@ -2,7 +2,7 @@ const cartRepository = require('../data/repositories/cartRepository');
 const cartService = require("../services/cartService");
 const productsService = require("../services/productsService");
 
-const {ProductDetailsViewModel} = require("../viewmodels/ProductDetailsViewModel");
+const productsRepository = require('../data/repositories/productsRepository');
 
 module.exports = {
 	cart,
@@ -36,18 +36,8 @@ function orders(req, res) {
 	})
 }
 
-async function products(req, res) {
-	const docTitle = 'Shop';
-	const path = '/shop/products';
-	const userId = req.app.get('user').id
-
-	const viewModel = productsService.createUserProductsOverviewViewModel(docTitle, path, userId)
-
-	res.render('shop/products', viewModel)
-}
-
 async function addProductToCart(req, res) {
-	const cartId = parseInt(req.app.get('user').cart.id) ;
+	const cartId = req.app.get('user').cart.id;
 	const productId = parseInt(req.body.id);
 
 	await cartRepository.addProductToCart(cartId, productId);
@@ -55,18 +45,25 @@ async function addProductToCart(req, res) {
 }
 
 async function removeProductFromCart(req, res) {
-	const id = req.body.id;
-	await cartRepository.removeProduct(id);
+	const productId = parseInt(req.body.productId);
+	const cartId = parseInt(req.body.cartId);
+
+	await cartRepository.removeProductFromCart(cartId, productId);
 	res.redirect('/shop/cart');
 }
 
+async function products(req, res) {
+	const docTitle = 'Shop';
+	const path = '/shop/products';
+	const userId = req.app.get('user').id
+
+	const products = await productsRepository.fetchAllUserProducts(userId);
+	const viewModel = productsService.createUserProductsOverviewViewModel(docTitle, path, products)
+
+	res.render('shop/products', viewModel)
+}
+
 function productDetails(req, res) {
-	const productViewModel = productsService.createProductViewModel(req.query);
-	const viewModel = new ProductDetailsViewModel()
-
-	viewModel.product = productViewModel;
-	viewModel.docTitle = `${viewModel.product.title} | Overview`;
-	viewModel.path = '/shop/product-details';
-
+	const viewModel = productsService.createProductViewModel(req.query);
 	res.render('shop/product-details', viewModel);
 }
