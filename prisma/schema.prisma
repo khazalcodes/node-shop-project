@@ -7,49 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Product {
-  id          Int        @id @default(autoincrement())
-  title       String     @db.VarChar(255)
-  price       Decimal    @default(0.00) @db.Decimal(65, 2)
-  imageUrl    String     @default("https://picsum.photos/320/320") @db.VarChar(255)
-  description String     @db.Text
-
-  author      User?      @relation(fields: [authorId], references: [id])
-  authorId    Int?
-  orders      Order[]
-
-  cartLines   CartLine[]
-
-  createdAt   DateTime   @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime   @updatedAt @db.Timestamp(6)
-}
-
-model User {
-  id           Int      @id @default(autoincrement())
-  firstName    String   @db.VarChar(255)
-  lastName     String   @db.VarChar(255)
-  emailAddress String   @db.VarChar(255)
-
-  products     Product[]
-  orders       Order[]
-  cart         Cart?
-
-  createdAt   DateTime @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime @updatedAt @db.Timestamp(6)
-}
-
-model Order {
-  id          Int       @id @default(autoincrement())
-  totalPrice  Decimal   @default(0.00) @db.Decimal(65,2)
-
-  products    Product[]
-  user        User      @relation(fields: [userId], references: [id])
-  userId      Int
-
-  createdAt   DateTime @default(now()) @db.Timestamp(6)
-  updatedAt   DateTime @updatedAt @db.Timestamp(6)
-}
-
 model Cart {
   id          Int       @id @default(autoincrement())
 
@@ -77,4 +34,66 @@ model CartLine {
   updatedAt   DateTime @updatedAt @db.Timestamp(6)
 
 }
+
+model Order {
+  id          Int       @id @default(autoincrement())
+  totalPrice  Decimal   @default(0.00) @db.Decimal(65,2)
+
+  orderLines  OrderLine[]
+
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+}
+
+model OrderLine{
+  order        Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId      Int
+
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId   Int
+
+  quantity    Int
+
+  @@id([orderId, productId])
+
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+
+}
+
+model Product {
+  id          Int        @id @default(autoincrement())
+  title       String     @db.VarChar(255)
+  price       Decimal    @default(0.00) @db.Decimal(65, 2)
+  imageUrl    String     @default("https://picsum.photos/320/320") @db.VarChar(255)
+  description String     @db.Text
+
+  author      User?      @relation(fields: [authorId], references: [id])
+  authorId    Int?
+
+  cartLines   CartLine[]
+  orderLines  OrderLine[]
+
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime   @updatedAt @db.Timestamp(6)
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  firstName    String   @db.VarChar(255)
+  lastName     String   @db.VarChar(255)
+  emailAddress String   @db.VarChar(255)
+
+  products     Product[]
+  orders       Order[]
+  cart         Cart?
+
+  createdAt   DateTime @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime @updatedAt @db.Timestamp(6)
+}
+
+
 

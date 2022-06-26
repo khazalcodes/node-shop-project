@@ -3,18 +3,20 @@ extends ../layouts/main-layout.pug
 block styles
 	link(rel="stylesheet", href="/css/product.css")
 	link(rel="stylesheet", href="/css/forms.css")
+	link(rel="stylesheet", href="/css/cart.css")
 
 block content
 	main
 		if hasCartLines
-			ul
+			ul.cart__item-list
 				each cartLine, id in cartLines
-					li
-						p #{cartLine.productTitle}: (#{cartLine.quantity} x $#{cartLine.unitPrice}) $#{cartLine.totalPrice}
+					li.cart__item.card
+						h1 #{cartLine.productTitle}
+						h2 (#{cartLine.quantity} x $#{cartLine.unitPrice}) $#{cartLine.totalPrice}
 						form.button-form(action='/shop/cart/remove-product', method='post')
 							button.btn.btn-warning(type='submit') Remove from Cart
 							input(type='hidden' name='cartId' value=cartLine.cartId)
 							input(type='hidden' name='productId' value=cartLine.productId)
 
-		h2 Total price: #{sumTotal}
+		h2.cart__sum-total Total price: #{sumTotal}
 
