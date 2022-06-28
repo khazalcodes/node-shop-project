@@ -17,7 +17,7 @@ function createCartOverviewViewModel(cart) {
 }
 
 function _convertCartLinesToCartLineViewModels(cartLines) {
-    const cartLineViewModels = {}
+    const cartLineViewModels = []
 
     cartLines.forEach(cl => {
         const viewModel = new CartLineViewModel();
@@ -31,15 +31,14 @@ function _convertCartLinesToCartLineViewModels(cartLines) {
         viewModel.totalPrice = quantity * price;
         viewModel.unitPrice = price;
 
-        cartLineViewModels[viewModel.cartId + "_" + viewModel.productId] = viewModel;
+        cartLineViewModels.push(viewModel);
     })
 
     return cartLineViewModels;
 }
 
-function _sumCartLineViewModelsTotalPrices(cartLineViewModels) {
-    return Object
-        .values(cartLineViewModels)
+function _sumCartLineViewModelsTotalPrices(cartLineViewModelsArray) {
+    return cartLineViewModelsArray
         .reduce(((x, { totalPrice }) => x + totalPrice), 0.0)
         .toFixed(2);
 }

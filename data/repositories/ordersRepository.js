@@ -1,8 +1,6 @@
 const {PrismaClient} = require('@prisma/client')
 const to = require('await-to-js').default;
 
-
-
 const prismaClient = new PrismaClient({
     rejectOnNotFound: true
 })
@@ -12,15 +10,14 @@ module.exports = {
     createOrder,
 }
 
-async function createOrder(cartLines, userId) {
+async function createOrder(userId, cartLinesArray) {
     const order = await prismaClient.order.create({
         data: {
             userId: userId
         }
     })
 
-    const newOrderLines = cartLines.map(cl => ({
-        orderId: order.id,
+    const newOrderLines = cartLinesArray.map(cl => ({
         productId: cl.productId,
         quantity: cl.quantity
     }));
@@ -32,7 +29,7 @@ async function createOrder(cartLines, userId) {
         data: {
             orderLines: {
                 createMany: {
-                    newOrderLines
+                    data: newOrderLines
                 }
             }
         }

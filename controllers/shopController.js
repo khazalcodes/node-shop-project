@@ -1,5 +1,6 @@
 const cartRepository = require('../data/repositories/cartRepository');
 const cartService = require("../services/cartService");
+const orderRepository = require('../data/repositories/ordersRepository');
 const productsService = require("../services/productsService");
 
 const productsRepository = require('../data/repositories/productsRepository');
@@ -7,9 +8,9 @@ const productsRepository = require('../data/repositories/productsRepository');
 module.exports = {
 	cart,
 	index,
-	orders,
 	products,
 	addProductToCart,
+	completeOrder,
 	removeProductFromCart,
 	productDetails,
 }
@@ -29,11 +30,13 @@ async function cart(req, res) {
 	res.render('shop/cart', viewModel);
 }
 
-function orders(req, res) {
-	res.render('shop/orders', {
-		docTitle: 'Your Orders',
-		path: "/shop/orders",
-	})
+async function completeOrder(req, res) {
+	const userId = req.app.get('user').id;
+	const cartLines = JSON.parse(req.body.cartLines)
+
+	await orderRepository.createOrder(userId, cartLines);
+
+	res.redirect('/user/orders')
 }
 
 async function addProductToCart(req, res) {

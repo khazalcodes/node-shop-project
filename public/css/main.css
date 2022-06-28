@@ -23,6 +23,7 @@ form {
 
 .centered {
   text-align: center;
+  display: block;
 }
 
 .main-header {
@@ -128,6 +129,7 @@ form {
   color: #ffeb3b;
   border-color: #ffeb3b;
 }
+
 
 .backdrop {
   position: fixed;

@@ -14,7 +14,8 @@ module.exports = {
 }
 
 async function addProductToCart(cartId, productId) {
-    const cart = await prismaClient.cart.update({
+    let err, cart;
+    [err, cart] = await to(prismaClient.cart.update({
         where: {
             id: cartId
         },
@@ -38,7 +39,12 @@ async function addProductToCart(cartId, productId) {
                 }
             }
         }
-    })
+    }));
+
+    if (err) {
+        console.log(err);
+        cart = undefined;
+    }
 
     return cart;
 }

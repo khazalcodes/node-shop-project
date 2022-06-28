@@ -21,7 +21,7 @@ async function addProduct (product) {
 			imageUrl: product.imageUrl,
 			description: product.description,
 			authorId: product.authorId,
-			orders: {},
+			orderLines: {},
 			cartLines: {},
 		}
 	})
@@ -43,18 +43,26 @@ async function deleteProduct(id) {
 	return deletedProduct;
 }
 
-async function editProduct (product) {
-	return prismaClient.product.update({
+async function editProduct (editedProduct) {
+	let err, product;
+	[err, product] = await to(prismaClient.product.update({
 		where: {
-			id: product.id
+			id: editedProduct.id
 		},
 		data: {
-			title: product.title,
-			price: product.price,
-			imageUrl: product.imageUrl,
-			description: product.description,
+			title: editedProduct.title,
+			price: editedProduct.price,
+			imageUrl: editedProduct.imageUrl,
+			description: editedProduct.description,
 		}
-	})
+	}));
+
+	if (err) {
+		console.log(err);
+		product = undefined;
+	}
+
+	return product
 }
 
 async function fetchAll() {

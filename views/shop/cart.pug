@@ -13,10 +13,16 @@ block content
 					li.cart__item.card
 						h1 #{cartLine.productTitle}
 						h2 (#{cartLine.quantity} x $#{cartLine.unitPrice}) $#{cartLine.totalPrice}
-						form.button-form(action='/shop/cart/remove-product', method='post')
+						form.button-form(action='/shop/cart/remove-product' method='post')
 							button.btn.btn-warning(type='submit') Remove from Cart
 							input(type='hidden' name='cartId' value=cartLine.cartId)
 							input(type='hidden' name='productId' value=cartLine.productId)
 
-		h2.cart__sum-total Total price: #{sumTotal}
+			h2.centered Total price: #{sumTotal}
+			form.centered.button-form(action='/shop/cart/complete-order' method='post')
+				button.btn(type='submit') Complete order
+				input(type='hidden' name='cartLines' value=cartLines)
+		else
+			h2.centered NOTHING IN THE BAKJE
+
 
