@@ -2,7 +2,24 @@ extends ../layouts/main-layout.pug
 
 block styles
 	link(rel="stylesheet", href="/css/product.css")
+	link(rel="stylesheet", href="/css/forms.css")
+	link(rel="stylesheet", href="/order/cart.css")
 
 block content
 	main
-		h1 Your shop is shite...
+		if hasOrders
+			ul.order__item-list
+				each order in orders
+					li.order__item.card
+						h1 #{order.id}
+						h2 $#{order.sumTotal}
+						ul
+							each orderLine in order.orderLines
+								p #{orderLine.productTitle}
+								p (#{orderLine.quantity} x $#{orderLine.unitPrice}) $#{orderLine.totalPrice}
+								form.button-form(action='/shop/product-details' method='post')
+									button.btn.btn-info(type='submit') Details
+									input(type='hidden' name='productId' value=order.productId)
+
+		else
+			h2.centered You ain't got nothing bro...

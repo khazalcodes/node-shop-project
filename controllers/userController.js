@@ -8,6 +8,6 @@ module.exports = {
 async function ordersOverview(req, res) {
     const userId = req.app.get('user').id;
     const orders = await ordersRepository.fetchUserOrders(userId);
-    console.log(orders)
-    res.redirect('/');
+    const viewModel = await ordersService.createOrdersViewModel(orders)
+    res.render('user/orders', viewModel);
 }

@@ -1,9 +1,10 @@
 const usersRepository = require('../data/repositories/usersRepository');
 
 module.exports = {
-    getRootUserDetails
+    getRootUserDetails,
 }
 
 async function getRootUserDetails() {
     return usersRepository.getRootUser();
 }
+

@@ -7,7 +7,6 @@ module.exports = {
 
 function createCartOverviewViewModel(cart) {
     const viewModel = new CartOverviewViewModel();
-
     const cartLineViewModels = _convertCartLinesToCartLineViewModels(cart.cartLines);
 
     viewModel.cartLines = cartLineViewModels;

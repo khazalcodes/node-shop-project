@@ -36,7 +36,7 @@ async function completeOrder(req, res) {
 
 	await orderRepository.createOrder(userId, cartLines);
 
-	res.redirect('/user/orders')
+	res.redirect('/user/orders-overview')
 }
 
 async function addProductToCart(req, res) {

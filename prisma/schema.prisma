@@ -37,8 +37,6 @@ model CartLine {
 
 model Order {
   id          Int       @id @default(autoincrement())
-  totalPrice  Decimal   @default(0.00) @db.Decimal(65,2)
-
   orderLines  OrderLine[]
 
   user        User      @relation(fields: [userId], references: [id])

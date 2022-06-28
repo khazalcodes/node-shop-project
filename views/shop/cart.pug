@@ -9,7 +9,7 @@ block content
 	main
 		if hasCartLines
 			ul.cart__item-list
-				each cartLine, id in cartLines
+				each cartLine in cartLines
 					li.cart__item.card
 						h1 #{cartLine.productTitle}
 						h2 (#{cartLine.quantity} x $#{cartLine.unitPrice}) $#{cartLine.totalPrice}
