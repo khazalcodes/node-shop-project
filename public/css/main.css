@@ -224,6 +224,10 @@ form {
   background-color: rgb(32, 71, 124);
 }
 
+.list--invisible {
+  padding: 0;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;

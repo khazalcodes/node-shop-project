@@ -13,6 +13,7 @@ block content
 					li.cart__item.card
 						h1 #{cartLine.productTitle}
 						h2 (#{cartLine.quantity} x $#{cartLine.unitPrice}) $#{cartLine.totalPrice}
+
 						form.button-form(action='/shop/cart/remove-product' method='post')
 							button.btn.btn-warning(type='submit') Remove from Cart
 							input(type='hidden' name='cartId' value=cartLine.cartId)
