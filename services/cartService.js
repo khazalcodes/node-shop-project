@@ -1,32 +1,43 @@
-const {CartProductEntry} = require("../models/ProductEntry");
-const cartRepository = require("../data/repositories/cartRepository");
 const {CartOverviewViewModel} = require("../viewmodels/CartOverviewViewModel");
+const {CartLineViewModel} = require("../viewmodels/CartLineViewModel");
 
 module.exports = {
-    createProductEntry,
     createCartOverviewViewModel,
 }
 
-function createProductEntry(product) {
-    const cartProductEntry = new CartProductEntry();
+function createCartOverviewViewModel(cart) {
+    const viewModel = new CartOverviewViewModel();
+    const cartLineViewModels = _convertCartLinesToCartLineViewModels(cart.cartLines);
 
-    cartProductEntry.productId = product.id;
-    cartProductEntry.title = product.title;
-    cartProductEntry.price = parseFloat(product.price);
-
-    return cartProductEntry;
+    viewModel.cartLines = cartLineViewModels;
+    viewModel.hasCartLines = cart.cartLines.length > 0;
+    viewModel.sumTotal = _sumCartLineViewModelsTotalPrices(cartLineViewModels);
+    return viewModel;
 }
 
-function createCartOverviewViewModel(docTitle, path, callback) {
-    cartRepository.fetchCart((cart) => {
-        const viewModel = new CartOverviewViewModel();
+function _convertCartLinesToCartLineViewModels(cartLines) {
+    const cartLineViewModels = []
 
-        viewModel.docTitle = docTitle;
-        viewModel.path = path;
-        viewModel.productEntries = cart.products;
-        viewModel.hasProductEntries = Object.keys(viewModel.productEntries).length > 0;
-        viewModel.totalPrice = cart.totalPrice;
+    cartLines.forEach(cl => {
+        const viewModel = new CartLineViewModel();
+        const price = cl.product.price;
+        const quantity = cl.quantity;
 
-        return callback(viewModel);
+        viewModel.cartId = cl.cartId;
+        viewModel.quantity = cl.quantity;
+        viewModel.productId = cl.product.id;
+        viewModel.productTitle = cl.product.title;
+        viewModel.totalPrice = quantity * price;
+        viewModel.unitPrice = price;
+
+        cartLineViewModels.push(viewModel);
     })
+
+    return cartLineViewModels;
+}
+
+function _sumCartLineViewModelsTotalPrices(cartLineViewModelsArray) {
+    return cartLineViewModelsArray
+        .reduce(((x, { totalPrice }) => x + totalPrice), 0.0)
+        .toFixed(2);
 }

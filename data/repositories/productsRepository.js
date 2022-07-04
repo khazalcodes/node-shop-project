@@ -1,81 +1,91 @@
-const fs = require('fs');
-const {db} = require('../../utils/database');
+const {PrismaClient} = require('@prisma/client')
+const to = require('await-to-js').default;
 
+const prismaClient = new PrismaClient({
+	rejectOnNotFound: true
+})
 
 module.exports = {
-	deleteProduct,
-	fetchAll,
-	findById,
 	addProduct,
+	deleteProduct,
 	editProduct,
+	fetchAllUserProducts,
+	fetchProduct,
 }
 
-function addProduct (product) {
-	readData(products => {
-		products.push(product);
-
-		fs.writeFile(db, JSON.stringify(products), (err) => {
-			console.log(err);
-		})
-	});
-}
-
-function deleteProduct(id) {
-	readData(products => {
-		const newProducts = products.filter(p => p.id !== id)
-
-		fs.writeFile(db, JSON.stringify(newProducts), (err) => {
-			console.log(err);
-		})
+async function addProduct (product) {
+	return prismaClient.product.create({
+		data: {
+			title: product.title,
+			price: product.price,
+			imageUrl: product.imageUrl,
+			description: product.description,
+			authorId: product.authorId,
+			orderLines: {},
+			cartLines: {},
+		}
 	})
 }
 
-function editProduct (viewModel) {
-	readData(products => {
-		// Implement error/sad path
-		const product = products.find(p => p.id === viewModel.id);
+async function deleteProduct(id) {
+	let err, deletedProduct;
+	[err, deletedProduct] = await to(prismaClient.product.delete({
+		where: {
+			id: id
+		},
+	}));
 
-		product.title = viewModel.title;
-		product.imageUrl = viewModel.imageUrl;
-		product.description = viewModel.description;
-		product.price = viewModel.price;
+	if (err) {
+		console.log(err);
+		return undefined;
+	}
 
-		fs.writeFile(db, JSON.stringify(products), (err) => {
-			console.log(err);
-		})
-	});
+	return deletedProduct;
 }
 
-function fetchAll() {
-	return db.execute('SELECT * FROM products')
-		.then(([rows, _]) => rows)
-		.catch(err => console.log(err))
+async function editProduct (editedProduct) {
+	let err, product;
+	[err, product] = await to(prismaClient.product.update({
+		where: {
+			id: editedProduct.id
+		},
+		data: {
+			title: editedProduct.title,
+			price: editedProduct.price,
+			imageUrl: editedProduct.imageUrl,
+			description: editedProduct.description,
+		}
+	}));
+
+	if (err) {
+		console.log(err);
+		product = undefined;
+	}
+
+	return product
 }
 
-function findById(id, callback) {
-	readData(products => {
-		const product = products.find(p => p.id === id);
-		callback(product);
+async function fetchAllUserProducts(userId) {
+	return prismaClient.product.findMany({
+		where: {
+			authorId: userId
+		}
 	})
 }
 
-function readData(callback) {
-	let products = []
 
-	fs.readFile(db, (readError, fileContent) => {
-		if (readError) {
-			console.log(readError);
-			return callback(products);
+async function fetchProduct(productId) {
+	let err, product;
+	[err, product] = await to(prismaClient.product.findUnique({
+		where: {
+			id: productId
 		}
+	}));
 
-		try {
-			products = JSON.parse(fileContent);
-		} catch(parseError) {
-			console.log(parseError);
-		}
+	if (err) {
+		console.log(err);
+		product = null;
+	}
 
-		return callback(products);
-	});
+	return product;
 }
-
-

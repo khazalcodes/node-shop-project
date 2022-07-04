@@ -1,0 +1,28 @@
+extends ../layouts/main-layout.pug 
+
+block styles
+	link(rel="stylesheet", href="/css/product.css")
+	link(rel="stylesheet", href="/css/forms.css")
+	link(rel="stylesheet", href="/css/orders.css")
+
+block content
+	main
+		if hasOrders
+			ul.orders__order-list
+				each order in orders
+					li.order-list__order.card
+						.order__head
+							h1 #{order.id}
+							h1 $#{order.sumTotal}
+							h1 #{order.date}
+						ul.list--invisible
+							each orderLine in order.orderLines
+								li.order__order-line
+									p #{orderLine.productTitle}
+									p (#{orderLine.quantity} x $#{orderLine.unitPrice}) $#{orderLine.totalPrice}
+									form.button-form(action='/order/product-details' method='get')
+										button.btn.btn-info(type='submit') Details
+										input(type='hidden' name='productId' value=orderLine.productId)
+
+		else
+			h2.centered You ain't got nothing bro...

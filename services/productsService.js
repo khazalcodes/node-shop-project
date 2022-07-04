@@ -1,42 +1,91 @@
-const productsRepository = require('../data/repositories/productsRepository');
-const { ProductsOverviewViewModel } = require('../viewmodels/ProductsOverviewViewModel');
-const { ProductViewModel } = require("../viewmodels/ProductViewModel");
-const Product = require("../models/Product");
+const {ProductsOverviewViewModel} = require('../viewmodels/ProductsOverviewViewModel');
+const {ProductViewModel} = require("../viewmodels/ProductViewModel");
+const {ProductInfoFormViewModel} = require('../viewmodels/ProductInfoFormViewModel');
+const {ProductDetailsViewModel} = require('../viewmodels/ProductDetailsViewModel');
 
 module.exports = {
-    createNewProduct,
-    createProductsOverviewViewModel,
+    createNewProductViewModel,
     createProductViewModel,
+    createProductDetailsViewModel,
+    createAddProductFormViewModel,
+    createEditProductFormViewModel,
+    createUserProductsOverviewViewModel,
 }
 
-function createNewProduct(request) {
-    const product = new Product();
-    product.title =  request.body.title;
-    product.imageUrl =  request.body.imageUrl;
-    product.description =  request.body.description;
-    product.price =  request.body.price;
-    product.id =  Math.random().toString();
+function createNewProductViewModel(rawProductInfo, authorId) {
+    const viewModel = new ProductViewModel();
 
-    return product;
+    viewModel.title =  rawProductInfo.title;
+    viewModel.imageUrl =  rawProductInfo.imageUrl;
+    viewModel.description =  rawProductInfo.description;
+    viewModel.price =  parseFloat(rawProductInfo.price);
+    viewModel.authorId = authorId;
+
+    return viewModel;
 }
 
-function createProductsOverviewViewModel(docTitle, path) {
-    return productsRepository.fetchAll()
-        .then(products => {
-            const viewModel = new ProductsOverviewViewModel();
-            console.log('shumblacalksnlsakjdf')
-            viewModel.docTitle = docTitle;
-            viewModel.path = path;
-            viewModel.products = convertProductsToProductViewModels(products);
-            viewModel.hasProducts = products.length > 0;
+function createUserProductsOverviewViewModel(docTitle, path, products) {
+    const viewModel = new ProductsOverviewViewModel();
 
-            console.log(viewModel)
-            return viewModel;
-        })
-        .catch(err => console.log(err));
+
+    viewModel.docTitle = docTitle;
+    viewModel.path = path;
+    viewModel.products = _convertProductsToProductViewModels(products);
+    viewModel.hasProducts = products.length > 0;
+
+    return viewModel;
 }
 
-function convertProductsToProductViewModels(products) {
+function createAddProductFormViewModel() {
+    const viewModel = new ProductInfoFormViewModel();
+
+    viewModel.docTitle = 'Add a product';
+    viewModel.path = '/admin/add-product';
+    viewModel.submitButtonText = 'Add Product';
+    viewModel.postPath = viewModel.path;
+
+    return viewModel
+}
+
+function createEditProductFormViewModel(product) {
+    const productViewModel = createProductViewModel(product)
+    const viewModel = new ProductInfoFormViewModel();
+
+    viewModel.product = productViewModel;
+
+    viewModel.docTitle = 'Edit Product';
+    viewModel.path = '/admin/edit-product';
+    viewModel.submitButtonText = 'Update details'
+    viewModel.postPath = viewModel.path
+
+    return viewModel
+}
+
+function createProductViewModel(rawProductInfo) {
+    const viewModel = new ProductViewModel()
+
+    viewModel.id = parseInt(rawProductInfo.id);
+    viewModel.title = rawProductInfo.title;
+    viewModel.imageUrl = rawProductInfo.imageUrl;
+    viewModel.description = rawProductInfo.description;
+    viewModel.price =  parseFloat(rawProductInfo.price);
+    viewModel.authorId = rawProductInfo.authorId;
+
+    return viewModel;
+}
+
+function createProductDetailsViewModel(rawProductInfo) {
+    const productViewModel = createProductViewModel(rawProductInfo);
+    const viewModel = new ProductDetailsViewModel()
+
+    viewModel.product = productViewModel;
+    viewModel.docTitle = `${viewModel.product.title} | Overview`;
+    viewModel.path = '/shop/product-details';
+
+    return viewModel
+}
+
+function _convertProductsToProductViewModels(products) {
     const productViewModels = {};
 
     products.forEach(p => {
@@ -45,16 +94,4 @@ function convertProductsToProductViewModels(products) {
     })
 
     return productViewModels;
-}
-
-function createProductViewModel(product) {
-    const viewModel = new ProductViewModel()
-
-    viewModel.id = product.id;
-    viewModel.title = product.title;
-    viewModel.imageUrl = product.imageUrl;
-    viewModel.description = product.description;
-    viewModel.price =  parseFloat(product.price)
-
-    return viewModel;
 }
