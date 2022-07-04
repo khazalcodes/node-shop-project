@@ -9,8 +9,8 @@ module.exports = {
 	addProduct,
 	deleteProduct,
 	editProduct,
-	fetchAll,
 	fetchAllUserProducts,
+	fetchProduct,
 }
 
 async function addProduct (product) {
@@ -65,14 +65,27 @@ async function editProduct (editedProduct) {
 	return product
 }
 
-async function fetchAll() {
-	return prismaClient.product.findMany()
-}
-
 async function fetchAllUserProducts(userId) {
 	return prismaClient.product.findMany({
 		where: {
 			authorId: userId
 		}
 	})
+}
+
+
+async function fetchProduct(productId) {
+	let err, product;
+	[err, product] = await to(prismaClient.product.findUnique({
+		where: {
+			id: productId
+		}
+	}));
+
+	if (err) {
+		console.log(err);
+		product = null;
+	}
+
+	return product;
 }

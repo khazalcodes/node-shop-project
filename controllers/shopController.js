@@ -11,6 +11,7 @@ module.exports = {
 	products,
 	addProductToCart,
 	completeOrder,
+	fetchProductDetails,
 	removeProductFromCart,
 	productDetails,
 }
@@ -67,6 +68,15 @@ async function products(req, res) {
 }
 
 function productDetails(req, res) {
-	const viewModel = productsService.createProductViewModel(req.query);
+	const viewModel = productsService.createProductDetailsViewModel(req.query);
+	res.render('shop/product-details', viewModel);
+}
+
+async function fetchProductDetails(req, res) {
+	const id = parseInt(req.query.productId);
+
+	const product = await productsRepository.fetchProduct(id);
+	const viewModel = productsService.createProductDetailsViewModel(product)
+
 	res.render('shop/product-details', viewModel);
 }

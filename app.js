@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const shopRouter = require('./routers/shopRouter');
 const adminRouter = require('./routers/adminRouter');
 const userRouter = require('./routers/userRouter');
+const orderRouter = require('./routers/orderRouter');
+
 const productsHub = require("./pub-sub-messaging/hubs/productsHub");
 const {rootDirectory} = require("./utils/root-directory");
 const usersService = require('./services/usersService');
@@ -32,10 +34,9 @@ app.get('/', (req, res) => {
 })
 
 app.use('/shop', shopRouter);
-
 app.use('/admin', adminRouter);
-
 app.use('/user', userRouter);
+app.use('/order', orderRouter);
 
 app.get('/500', (req, res) => {
 	res.status(500).render('500', {docTitle: 'An error has occurred!'})

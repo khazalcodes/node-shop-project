@@ -35,6 +35,16 @@ async function createOrder(userId, cartLinesArray) {
         }
     })
 
+    await prismaClient.cart.update({
+        where: {
+            userId: userId
+        },
+        data: {
+            cartLines: {
+                deleteMany: {}
+            }
+        }
+    })
 
     return order;
 }

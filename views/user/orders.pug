@@ -20,9 +20,9 @@ block content
 								li.order__order-line
 									p #{orderLine.productTitle}
 									p (#{orderLine.quantity} x $#{orderLine.unitPrice}) $#{orderLine.totalPrice}
-									form.button-form(action='/shop/product-details' method='get')
+									form.button-form(action='/order/product-details' method='get')
 										button.btn.btn-info(type='submit') Details
-										input(type='hidden' name='productId' value=order.productId)
+										input(type='hidden' name='productId' value=orderLine.productId)
 
 		else
 			h2.centered You ain't got nothing bro...
