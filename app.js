@@ -10,6 +10,7 @@ const orderRouter = require('./routers/orderRouter');
 const productsHub = require("./pub-sub-messaging/hubs/productsHub");
 const {rootDirectory} = require("./utils/root-directory");
 const usersService = require('./services/usersService');
+const {mongoConnect} = require('./data/mongodb-database');
 
 const app = express();
 
@@ -45,5 +46,7 @@ app.get('/500', (req, res) => {
 app.use((req, res) => {
 	res.status(404).render('404', {docTitle: "Page not found"})
 })
-
-app.listen(3000);
+mongoConnect().then(mongoConnection => {
+	console.log(mongoConnection)
+	app.listen(3000);
+});
