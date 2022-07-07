@@ -20,7 +20,7 @@ async function mongoConnect() {
     if (err) console.log(err);
     else console.log('Connected to the Mongolian database');
 
-    _db = connection.db();
+    return connection.db();
 }
 
 function getDb() {

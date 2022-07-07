@@ -31,6 +31,7 @@ function createUserProductsOverviewViewModel(docTitle, path, products) {
     viewModel.docTitle = docTitle;
     viewModel.path = path;
     viewModel.products = _convertProductsToProductViewModels(products);
+    console.log(viewModel.products)
     viewModel.hasProducts = products.length > 0;
 
     return viewModel;
@@ -86,11 +87,11 @@ function createProductDetailsViewModel(rawProductInfo) {
 }
 
 function _convertProductsToProductViewModels(products) {
-    const productViewModels = {};
+    const productViewModels = [];
 
     products.forEach(p => {
         const viewModel = createProductViewModel(p);
-        productViewModels[viewModel.id] = viewModel
+        productViewModels.push(viewModel)
     })
 
     return productViewModels;

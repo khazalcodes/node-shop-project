@@ -7,13 +7,20 @@ module.exports = {
 	editProduct,
 	fetchAllUserProducts,
 	fetchProduct,
+	setDb
+}
+
+let db;
+let productsCollection;
+
+function setDb(mongoDbInstance) {
+	db = mongoDbInstance;
+	productsCollection = db.collection('products');
 }
 
 async function addProduct (product) {
-	const db = getDb();
-
 	let err, result;
-	[err, result] = await to(db.collection('products').insertOne(product));
+	[err, result] = await to(productsCollection.insertOne(product));
 
 	if (err) console.log(err);
 
@@ -30,9 +37,8 @@ async function editProduct (editedProduct) {
 }
 
 async function fetchAllUserProducts(userId) {
-	throw 'NOT IMPLEMENTED';
+	return await productsCollection.find().toArray();
 }
-
 
 async function fetchProduct(productId) {
 	throw 'NOT IMPLEMENTED';
