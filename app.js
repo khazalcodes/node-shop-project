@@ -7,7 +7,6 @@ const adminRouter = require('./routers/adminRouter');
 const userRouter = require('./routers/userRouter');
 const orderRouter = require('./routers/orderRouter');
 
-const productsHub = require("./pub-sub-messaging/hubs/productsHub");
 const {rootDirectory} = require("./utils/root-directory");
 const usersService = require('./services/usersService');
 const {mongoConnect} = require('./data/mongodb-database');
@@ -17,13 +16,11 @@ const app = express();
 app.set('view engine', 'pug');
 app.set('views', 'views');
 
-usersService.getRootUserDetails()
-	.then(user => {
-		app.set('user', user);
-	})
-	.catch(err => console.log(err));
-
-productsHub.bindSubscribers();
+// usersService.getRootUserDetails()
+// 	.then(user => {
+// 		app.set('user', user);
+// 	})
+// 	.catch(err => console.log(err));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -46,7 +43,7 @@ app.get('/500', (req, res) => {
 app.use((req, res) => {
 	res.status(404).render('404', {docTitle: "Page not found"})
 })
-mongoConnect().then(mongoConnection => {
-	console.log(mongoConnection)
+
+mongoConnect().then(() => {
 	app.listen(3000);
 });

@@ -22,7 +22,7 @@ function getAddProduct(req, res) {
 }
 
 async function postAddProduct(req, res) {
-	const authorId = req.app.get('user').id;
+	const authorId = undefined;
 	await productsRepository.addProduct(productsService.createNewProductViewModel(req.body, authorId))
 	res.redirect('/')
 }

@@ -3,7 +3,14 @@ require('dotenv').config();
 const mongodb = require('mongodb');
 const to = require('await-to-js').default;
 
-exports.mongoConnect = async function() {
+module.exports = {
+    mongoConnect,
+    getDb
+}
+
+let _db;
+
+async function mongoConnect() {
     const MongoClient = mongodb.MongoClient;
 
     let err, connection;
@@ -13,5 +20,12 @@ exports.mongoConnect = async function() {
     if (err) console.log(err);
     else console.log('Connected to the Mongolian database');
 
-    return connection
+    _db = connection.db();
 }
+
+function getDb() {
+    if (_db) return _db;
+    throw 'No database found!';
+}
+
+
