@@ -11,8 +11,7 @@ module.exports = {
 }
 
 async function deleteProduct(req, res) {
-	const id = parseInt(req.body.id);
-	await productsRepository.deleteProduct(id);
+	await productsRepository.deleteProduct(req.body.id);
 	res.redirect('/');
 }
 
