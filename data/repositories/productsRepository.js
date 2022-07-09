@@ -1,4 +1,4 @@
-const {getDb} = require('../mongodb-database');
+const mongodb = require('mongodb')
 const to = require('await-to-js').default;
 
 module.exports = {
@@ -33,11 +33,22 @@ async function deleteProduct(id) {
 }
 
 async function editProduct (editedProduct) {
-	throw 'NOT IMPLEMENTED';
+	productsCollection.updateOne(
+		{_id: new mongodb.ObjectId(editedProduct.id)},
+		{
+			$set: {
+				'title': editedProduct.title,
+				'imageUrl': editedProduct.imageUrl,
+				'price': editedProduct.price,
+				'description': editedProduct.description,
+			}
+		})
 }
 
 async function fetchAllUserProducts(userId) {
-	return await productsCollection.find().toArray();
+	const products = await productsCollection.find().toArray();
+	products.forEach(p => p.id = p._id)
+	return products
 }
 
 async function fetchProduct(productId) {

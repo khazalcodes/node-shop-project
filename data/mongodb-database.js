@@ -5,10 +5,7 @@ const to = require('await-to-js').default;
 
 module.exports = {
     mongoConnect,
-    getDb
 }
-
-let _db;
 
 async function mongoConnect() {
     const MongoClient = mongodb.MongoClient;
@@ -22,10 +19,3 @@ async function mongoConnect() {
 
     return connection.db();
 }
-
-function getDb() {
-    if (_db) return _db;
-    throw 'No database found!';
-}
-
-
