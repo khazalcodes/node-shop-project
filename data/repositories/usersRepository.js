@@ -37,6 +37,8 @@ async function getUser(id) {
 
     if (err) console.log(err);
 
+    user.id = user._id;
+
     return user;
 }
 

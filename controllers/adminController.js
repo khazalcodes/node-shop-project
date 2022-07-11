@@ -21,7 +21,7 @@ function getAddProduct(req, res) {
 }
 
 async function postAddProduct(req, res) {
-	const authorId = undefined;
+	const authorId = req.app.get('user').id;
 	await productsRepository.addProduct(productsService.createNewProductViewModel(req.body, authorId))
 	res.redirect('/')
 }
@@ -40,9 +40,9 @@ async function postEditProductForm(req, res) {
 async function productsOverview(req, res) {
 	const docTitle = "Admin | Products overview";
 	const path = "/admin/products-overview";
-	const userId = req.app.get('user').id
+	const authorId = req.app.get('user').id
 
-	const products = await productsRepository.fetchAllUserProducts(userId);
+	const products = await productsRepository.fetchAllUserProducts(authorId);
 	const viewModel = productsService.createUserProductsOverviewViewModel(docTitle, path, products)
 
 	res.render('admin/products-overview', viewModel);

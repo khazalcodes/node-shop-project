@@ -50,4 +50,5 @@ mongoConnect()
 	.then(user => {
 		app.set('user', user);
 		console.log(app.get('user'))
+		app.listen(3000)
 	});

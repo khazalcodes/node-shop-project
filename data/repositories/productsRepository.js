@@ -57,8 +57,8 @@ async function editProduct (editedProduct) {
 	return result;
 }
 
-async function fetchAllUserProducts(userId) {
-	const products = await productsCollection.find().toArray();
+async function fetchAllUserProducts(authorId) {
+	const products = await productsCollection.find({ authorId:  new mongodb.ObjectId(authorId) }).toArray();
 	products.forEach(p => p.id = p._id)
 
 	return products
