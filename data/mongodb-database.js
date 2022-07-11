@@ -14,8 +14,12 @@ async function mongoConnect() {
 
     [err, connection] = await to(MongoClient.connect(process.env.MONGODB_URL));
 
-    if (err) console.log(err);
-    else console.log('Connected to the Mongolian database');
+    if (err) {
+        console.log(err);
+        throw "UNCONNECTED"
+    }
+
+    console.log('Connected to the Mongolian database');
 
     return connection.db();
 }

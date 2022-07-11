@@ -11,17 +11,13 @@ const {rootDirectory} = require("./utils/root-directory");
 const usersService = require('./services/usersService');
 const {mongoConnect} = require('./data/mongodb-database');
 const productsRepository = require('./data/repositories/productsRepository');
+const usersRepository = require('./data/repositories/usersRepository');
 
 const app = express();
 
 app.set('view engine', 'pug');
 app.set('views', 'views');
 
-usersService.getRootUserDetails()
-	.then(user => {
-		app.set('user', user);
-	})
-	.catch(err => console.log(err));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -45,7 +41,13 @@ app.use((req, res) => {
 	res.status(404).render('404', {docTitle: "Page not found"})
 })
 
-mongoConnect().then(db => {
-	productsRepository.setDb(db);
-	app.listen(3000);
-});
+mongoConnect()
+	.then(db => {
+		productsRepository.setDb(db);
+		usersRepository.setDb(db);
+		return usersService.getRootUserDetails()
+	})
+	.then(user => {
+		app.set('user', user);
+		console.log(app.get('user'))
+	});
