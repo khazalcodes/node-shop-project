@@ -3,7 +3,6 @@ const to = require('await-to-js').default;
 
 module.exports = {
     getRootUser,
-    getUser,
     setDb,
 }
 
@@ -18,7 +17,7 @@ function setDb(mongoDbInstance) {
 async function getRootUser() {
     let err, user;
 
-    [err, user] = await to(getUser(process.env.ROOT_USER_ID))
+    [err, user] = await to(_getUser(process.env.ROOT_USER_ID))
 
     if (err) {
         console.log(err);
@@ -28,11 +27,8 @@ async function getRootUser() {
     return user;
 }
 
-async function getUser(id) {
+async function _getUser(id) {
     let err, user;
-
-    console.log(id);
-
     [err, user] = await to(usersCollection.findOne({ _id: new mongodb.ObjectId(id) }))
 
     if (err) console.log(err);

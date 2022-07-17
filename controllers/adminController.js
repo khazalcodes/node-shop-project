@@ -28,7 +28,6 @@ async function postAddProduct(req, res) {
 
 function getEditProductForm(req, res) {
 	const viewModel = productsService.createEditProductFormViewModel(req.query)
-	console.log(viewModel)
 	res.render('admin/product-info-form', viewModel);
 }
 

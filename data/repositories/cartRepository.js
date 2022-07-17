@@ -1,62 +1,41 @@
-const {PrismaClient} = require('@prisma/client')
+const mongodb = require('mongodb')
 const to = require('await-to-js').default;
-
-const prismaClient = new PrismaClient({
-    rejectOnNotFound: true
-})
 
 module.exports = {
     fetchCart,
     addProductToCart,
-    removeProductFromCart
+    removeProductFromCart,
+    setDb,
 }
 
-async function addProductToCart(cartId, productId) {
-    let err, cart;
-    [err, cart] = await to(prismaClient.cart.update({
-        where: {
-            id: cartId
-        },
-        data: {
-            cartLines: {
-                upsert: {
-                    where: {
-                        cartId_productId: {
-                            cartId: cartId,
-                            productId: productId
-                        }
-                    },
-                    create: {
-                        productId: productId,
-                        quantity: 1
-                    },
-                    update: {
-                        productId: productId,
-                        quantity: { increment: 1 }
-                    }
-                }
-            }
-        }
-    }));
+let db = undefined;
+let cart = undefined;
+let usersCollection = undefined;
 
-    if (err) {
-        console.log(err);
-        cart = undefined;
-    }
-
-    return cart;
+function setDb(mongodbInstance) {
+    db = mongodbInstance;
+    usersCollection = db.collection('users');
 }
 
-async function removeProductFromCart(cartId, productId) {
+async function addProductToCart(userId, productId) {
+    let err, result;
+    const query = { _id: new mongodb.ObjectId(userId) };
+
+    [err, result] = await to( usersCollection.updateOne(
+        query,
+        { $inc: { [`cart.items.${productId}`]: 1 } }
+    ));
+
+    console.log(result);
+
+    if (err) console.log(err);
+
+    return result
+}
+
+async function removeProductFromCart(userId, productId) {
     let err, cart;
-    [err, cart] =  await to(prismaClient.cartLine.delete({
-        where: {
-            cartId_productId: {
-                cartId: cartId,
-                productId: productId
-            }
-        }
-    }));
+    [err, cart] =  await to();
 
     if (err) {
         console.log(err);
@@ -66,23 +45,17 @@ async function removeProductFromCart(cartId, productId) {
     return cart;
 }
 
-async function fetchCart(cartId) {
-    let err, cart;
-    [err, cart] = await to(prismaClient.cart.findUnique({
-        where: { id: cartId },
-        include: {
-            cartLines: {
-                include: {
-                    product: true
-                }
-            }
-        }
-    }));
+async function fetchCart(userId) {
+    const query = { _id: new mongodb.ObjectId(userId) };
+    const options = { projection: { cart: 1, _id: 0 } }
+
+    let err, document;
+    [err, document] = await to(usersCollection.findOne(query, options));
 
     if (err) {
         console.log(err);
         return undefined;
     }
 
-    return cart;
+    return document.cart;
 }

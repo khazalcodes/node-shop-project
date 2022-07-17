@@ -19,7 +19,5 @@ async function mongoConnect() {
         throw "UNCONNECTED"
     }
 
-    console.log('Connected to the Mongolian database');
-
     return connection.db();
 }

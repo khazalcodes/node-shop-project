@@ -41,10 +41,10 @@ async function completeOrder(req, res) {
 }
 
 async function addProductToCart(req, res) {
-	const cartId = req.app.get('user').cart.id;
-	const productId = parseInt(req.body.id);
+	const userId = req.app.get('user').id;
+	const productId = req.body.id;
 
-	await cartRepository.addProductToCart(cartId, productId);
+	await cartRepository.addProductToCart(userId, productId);
 	res.redirect('/');
 }
 

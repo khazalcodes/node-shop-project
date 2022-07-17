@@ -7,4 +7,3 @@ module.exports = {
 async function getRootUserDetails() {
     return usersRepository.getRootUser();
 }
-
