@@ -9,7 +9,6 @@ module.exports = {
 }
 
 let db = undefined;
-let cart = undefined;
 let usersCollection = undefined;
 
 function setDb(mongodbInstance) {
@@ -17,13 +16,20 @@ function setDb(mongodbInstance) {
     usersCollection = db.collection('users');
 }
 
-async function addProductToCart(userId, productId) {
+async function addProductToCart(userId, product) {
+    const cartLineHandle = `cart.items.${product.id}`;
+    const productDetails = `${cartLineHandle}.details`;
+
     let err, result;
     const query = { _id: new mongodb.ObjectId(userId) };
 
-    [err, result] = await to( usersCollection.updateOne(
+    [err, result] = await to(usersCollection.updateOne(
         query,
-        { $inc: { [`cart.items.${productId}`]: 1 } }
+        {
+            // Currently setting every single time, need to find a way to do only once
+            $set: { [productDetails]: product },
+            $inc: { [`${cartLineHandle}.quantity`]: 1 },
+        }
     ));
 
     console.log(result);
@@ -46,6 +52,7 @@ async function removeProductFromCart(userId, productId) {
 }
 
 async function fetchCart(userId) {
+    console.log(userId)
     const query = { _id: new mongodb.ObjectId(userId) };
     const options = { projection: { cart: 1, _id: 0 } }
 
@@ -57,5 +64,5 @@ async function fetchCart(userId) {
         return undefined;
     }
 
-    return document.cart;
+    return document;
 }

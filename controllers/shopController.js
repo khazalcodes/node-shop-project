@@ -24,17 +24,16 @@ function index(req, res) {
 }
 
 async function cart(req, res) {
-	const cartId = req.app.get('user').cart.id
-	const cart = await cartRepository.fetchCart(cartId)
+	const userId = req.app.get('user').id
+	const cart = await cartRepository.fetchCart(userId)
 
-	const viewModel = cartService.createCartOverviewViewModel(cart);
-	res.render('shop/cart', viewModel);
+	console.log(cart)
+	res.redirect('/')
 }
 
 async function completeOrder(req, res) {
 	const userId = req.app.get('user').id;
 	const cartLines = JSON.parse(req.body.cartLines)
-
 	await orderRepository.createOrder(userId, cartLines);
 
 	res.redirect('/user/orders-overview')
@@ -42,9 +41,9 @@ async function completeOrder(req, res) {
 
 async function addProductToCart(req, res) {
 	const userId = req.app.get('user').id;
-	const productId = req.body.id;
+	const product = req.body;
 
-	await cartRepository.addProductToCart(userId, productId);
+	await cartRepository.addProductToCart(userId, product);
 	res.redirect('/');
 }
 

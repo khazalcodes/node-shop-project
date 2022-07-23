@@ -12,6 +12,7 @@ const usersService = require('./services/usersService');
 const {mongoConnect} = require('./data/mongodb-database');
 const productsRepository = require('./data/repositories/productsRepository');
 const usersRepository = require('./data/repositories/usersRepository');
+const cartRepository = require('./data/repositories/cartRepository');
 
 const app = express();
 
@@ -24,7 +25,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(path.join(rootDirectory, 'public')));
 
-app.get('/', (req, res) => {
+app.get('/', (req: any, res: any) => {
 	res.redirect('/shop/products')
 })
 
@@ -33,22 +34,24 @@ app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
 
-app.get('/500', (req, res) => {
+app.get('/500', (req: any, res: any) => {
 	res.status(500).render('500', {docTitle: 'An error has occurred!'})
 });
 
-app.use((req, res) => {
+app.use((req: any, res: any) => {
 	res.status(404).render('404', {docTitle: "Page not found"})
 })
 
 mongoConnect()
-	.then(db => {
+	.then((db: any) => {
 		productsRepository.setDb(db);
 		usersRepository.setDb(db);
+		cartRepository.setDb(db);
 		return usersService.getRootUserDetails()
 	})
-	.then(user => {
+	.then((user: any) => {
 		app.set('user', user);
-		console.log(app.get('user'))
 		app.listen(3000)
-	});
+		console.log('App listening on port 3000!');
+	})
+	.catch((err: any) => console.log(err));

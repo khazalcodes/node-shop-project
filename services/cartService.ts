@@ -1,24 +1,27 @@
-const {CartOverviewViewModel} = require("../viewmodels/CartOverviewViewModel");
+import {ICartOverviewViewModel} from "../viewmodels/CartOverviewViewModel";
 const {CartLineViewModel} = require("../viewmodels/CartLineViewModel");
 
 module.exports = {
     createCartOverviewViewModel,
 }
 
-function createCartOverviewViewModel(cart) {
-    const viewModel = new CartOverviewViewModel();
+function createCartOverviewViewModel(cart: any): ICartOverviewViewModel {
     const cartLineViewModels = _convertCartLinesToCartLineViewModels(cart.cartLines);
+    console.log("asd");
 
-    viewModel.cartLines = cartLineViewModels;
-    viewModel.hasCartLines = cart.cartLines.length > 0;
-    viewModel.sumTotal = _sumCartLineViewModelsTotalPrices(cartLineViewModels);
-    return viewModel;
+    return {
+        docTitle: 'Cart Overview',
+        path: 'shop/cart',
+        cartLines: cartLineViewModels,
+        hasCartLines: cart.cartLines.length > 0,
+        sumTotal: _sumCartLineViewModelsTotalPrices(cartLineViewModels)
+    }
 }
 
-function _convertCartLinesToCartLineViewModels(cartLines) {
-    const cartLineViewModels = []
+function _convertCartLinesToCartLineViewModels(cartLines: any) {
+    const cartLineViewModels: any[] = []
 
-    cartLines.forEach(cl => {
+    cartLines.forEach((cl: any) => {
         const viewModel = new CartLineViewModel();
         const price = cl.product.price;
         const quantity = cl.quantity;
@@ -36,8 +39,8 @@ function _convertCartLinesToCartLineViewModels(cartLines) {
     return cartLineViewModels;
 }
 
-function _sumCartLineViewModelsTotalPrices(cartLineViewModelsArray) {
+function _sumCartLineViewModelsTotalPrices(cartLineViewModelsArray: any) {
     return cartLineViewModelsArray
-        .reduce(((x, { totalPrice }) => x + totalPrice), 0.0)
+        .reduce(((x: any, { totalPrice }: any) => x + totalPrice), 0.0)
         .toFixed(2);
 }
