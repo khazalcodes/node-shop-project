@@ -26,9 +26,7 @@ function index(req, res) {
 async function cart(req, res) {
 	const userId = req.app.get('user').id
 	const cart = await cartRepository.fetchCart(userId)
-	console.log(cart)
 	const cartOverviewViewModel = cartService.createCartOverviewViewModel(cart)
-	console.log(cartOverviewViewModel)
 
 	res.render('shop/cart', cartOverviewViewModel)
 }
@@ -50,10 +48,11 @@ async function addProductToCart(req, res) {
 }
 
 async function removeProductFromCart(req, res) {
-	const productId = parseInt(req.body.productId);
-	const cartId = parseInt(req.body.cartId);
+	const userId = req.app.get('user').id;
+	const productId = req.body.productId;
 
-	await cartRepository.removeProductFromCart(cartId, productId);
+	await cartRepository.removeProductFromCart(userId, productId);
+
 	res.redirect('/shop/cart');
 }
 

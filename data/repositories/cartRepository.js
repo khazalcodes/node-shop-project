@@ -41,7 +41,13 @@ async function addProductToCart(userId, product) {
 
 async function removeProductFromCart(userId, productId) {
     let err, cart;
-    [err, cart] =  await to();
+    const query = { _id: new mongodb.ObjectId(userId) };
+    const cartLineHandle = `cart.cartLines.${productId}`;
+
+    [err, cart] =  await to(usersCollection.updateOne(
+        query,
+        { $unset: { [`${cartLineHandle}`]: 1 }, }
+    ));
 
     if (err) {
         console.log(err);
