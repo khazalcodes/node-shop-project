@@ -26,9 +26,11 @@ function index(req, res) {
 async function cart(req, res) {
 	const userId = req.app.get('user').id
 	const cart = await cartRepository.fetchCart(userId)
-
 	console.log(cart)
-	res.redirect('/')
+	const cartOverviewViewModel = cartService.createCartOverviewViewModel(cart)
+	console.log(cartOverviewViewModel)
+
+	res.render('shop/cart', cartOverviewViewModel)
 }
 
 async function completeOrder(req, res) {

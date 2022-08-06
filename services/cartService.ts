@@ -7,13 +7,12 @@ module.exports = {
 
 function createCartOverviewViewModel(cart: any): ICartOverviewViewModel {
     const cartLineViewModels = _convertCartLinesToCartLineViewModels(cart.cartLines);
-    console.log("asd");
 
     return {
         docTitle: 'Cart Overview',
         path: 'shop/cart',
         cartLines: cartLineViewModels,
-        hasCartLines: cart.cartLines.length > 0,
+        hasCartLines: cartLineViewModels.length > 0,
         sumTotal: _sumCartLineViewModelsTotalPrices(cartLineViewModels)
     }
 }
@@ -21,7 +20,8 @@ function createCartOverviewViewModel(cart: any): ICartOverviewViewModel {
 function _convertCartLinesToCartLineViewModels(cartLines: any) {
     const cartLineViewModels: any[] = []
 
-    cartLines.forEach((cl: any) => {
+    let cl : any
+    for (cl of Object.values(cartLines)) {
         const viewModel = new CartLineViewModel();
         const price = cl.product.price;
         const quantity = cl.quantity;
@@ -34,7 +34,8 @@ function _convertCartLinesToCartLineViewModels(cartLines: any) {
         viewModel.unitPrice = price;
 
         cartLineViewModels.push(viewModel);
-    })
+
+    }
 
     return cartLineViewModels;
 }

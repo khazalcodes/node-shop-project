@@ -7,7 +7,7 @@
   "main": "app.ts",
   "scripts": {
     "start": "node app.js",
-    "dev": "nodemon --watch * --exec ts-node --ext 'ts,js,json' --delay 2 app.ts",
+    "dev": "nodemon --watch * --exec ts-node --ext 'ts,js,json' app.ts",
     "build": "tsc -p ."
   },
   "dependencies": {

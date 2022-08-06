@@ -17,8 +17,8 @@ function setDb(mongodbInstance) {
 }
 
 async function addProductToCart(userId, product) {
-    const cartLineHandle = `cart.items.${product.id}`;
-    const productDetails = `${cartLineHandle}.details`;
+    const cartLineHandle = `cart.cartLines.${product.id}`;
+    const productDetails = `${cartLineHandle}.product`;
 
     let err, result;
     const query = { _id: new mongodb.ObjectId(userId) };
@@ -64,5 +64,5 @@ async function fetchCart(userId) {
         return undefined;
     }
 
-    return document;
+    return document.cart;
 }
