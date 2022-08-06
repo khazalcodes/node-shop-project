@@ -17,7 +17,7 @@ function createCartOverviewViewModel(cart: any): ICartOverviewViewModel {
     }
 }
 
-function _convertCartLinesToCartLineViewModels(cartLines: any) {
+function _convertCartLinesToCartLineViewModels(cartLines: any): any[] {
     const cartLineViewModels: any[] = []
 
     let cl : any

@@ -1,3 +1,7 @@
+import {Cart} from "../models/Cart";
+import {Collection, Db} from "mongodb";
+import {Product} from "../models/Product";
+
 const mongodb = require('mongodb')
 const to = require('await-to-js').default;
 
@@ -8,15 +12,15 @@ module.exports = {
     setDb,
 }
 
-let db = undefined;
-let usersCollection = undefined;
+let db: Db;
+let usersCollection: Collection;
 
-function setDb(mongodbInstance) {
+function setDb(mongodbInstance: Db) {
     db = mongodbInstance;
     usersCollection = db.collection('users');
 }
 
-async function addProductToCart(userId, product) {
+async function addProductToCart(userId: string, product: Product) {
     const cartLineHandle = `cart.cartLines.${product.id}`;
     const productDetails = `${cartLineHandle}.product`;
 
@@ -39,7 +43,7 @@ async function addProductToCart(userId, product) {
     return result
 }
 
-async function removeProductFromCart(userId, productId) {
+async function removeProductFromCart(userId: string, productId: string): Promise<Cart> {
     let err, cart;
     const query = { _id: new mongodb.ObjectId(userId) };
     const cartLineHandle = `cart.cartLines.${productId}`;
@@ -49,15 +53,13 @@ async function removeProductFromCart(userId, productId) {
         { $unset: { [`${cartLineHandle}`]: 1 }, }
     ));
 
-    if (err) {
-        console.log(err);
-        return undefined
-    }
+    if (err) throw err;
 
     return cart;
 }
 
-async function fetchCart(userId) {
+
+async function fetchCart(userId: string): Promise<Cart> {
     console.log(userId)
     const query = { _id: new mongodb.ObjectId(userId) };
     const options = { projection: { cart: 1, _id: 0 } }
@@ -65,10 +67,7 @@ async function fetchCart(userId) {
     let err, document;
     [err, document] = await to(usersCollection.findOne(query, options));
 
-    if (err) {
-        console.log(err);
-        return undefined;
-    }
+    if (err) throw err;
 
     return document.cart;
 }
