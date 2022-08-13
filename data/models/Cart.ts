@@ -1,5 +1,5 @@
 import {ProductLine} from "./ProductLine";
 
 export type Cart = {
-    [key: string]: ProductLine
+    cartLines: { [key: string]: ProductLine }
 }

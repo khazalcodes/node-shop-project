@@ -1,7 +1,9 @@
-export interface ICartOverviewViewModel {
+import {CartLineViewModel} from "./CartLineViewModel";
+
+export type CartOverviewViewModel = {
     docTitle: string;
     path: string;
-    cartLines: object;
+    cartLines: CartLineViewModel[];
     hasCartLines: boolean;
     sumTotal: number ;
 }

@@ -1,12 +1,16 @@
-import {ICartOverviewViewModel} from "../viewmodels/CartOverviewViewModel";
-const {CartLineViewModel} = require("../viewmodels/CartLineViewModel");
+import {CartOverviewViewModel} from "../viewmodels/CartOverviewViewModel";
+import {Cart} from "../data/models/Cart";
+import {ProductLine} from "../data/models/ProductLine";
+import {CartLineViewModel} from "../viewmodels/CartLineViewModel";
 
 module.exports = {
     createCartOverviewViewModel,
 }
 
-function createCartOverviewViewModel(cart: any): ICartOverviewViewModel {
-    const cartLineViewModels = _convertCartLinesToCartLineViewModels(cart.cartLines);
+function createCartOverviewViewModel(cart: Cart): CartOverviewViewModel {
+    let cartLineViewModels: CartLineViewModel[] = [];
+
+    if (cart.cartLines) cartLineViewModels = _convertCartLinesToCartLineViewModels(cart.cartLines);
 
     return {
         docTitle: 'Cart Overview',
@@ -17,24 +21,23 @@ function createCartOverviewViewModel(cart: any): ICartOverviewViewModel {
     }
 }
 
-function _convertCartLinesToCartLineViewModels(cartLines: any): any[] {
-    const cartLineViewModels: any[] = []
+function _convertCartLinesToCartLineViewModels(cartLines: {[key: string]: ProductLine}): CartLineViewModel[] {
+    const cartLineViewModels: CartLineViewModel[] = []
 
     let cl : any
     for (cl of Object.values(cartLines)) {
-        const viewModel = new CartLineViewModel();
         const price = cl.product.price;
         const quantity = cl.quantity;
 
-        viewModel.cartId = cl.cartId;
-        viewModel.quantity = cl.quantity;
-        viewModel.productId = cl.product.id;
-        viewModel.productTitle = cl.product.title;
-        viewModel.totalPrice = quantity * price;
-        viewModel.unitPrice = price;
+        let viewModel: CartLineViewModel = {
+            quantity: cl.quantity,
+            productId: cl.product.id,
+            productTitle: cl.product.title,
+            totalPrice: quantity * price,
+            unitPrice: price,
+        };
 
         cartLineViewModels.push(viewModel);
-
     }
 
     return cartLineViewModels;
