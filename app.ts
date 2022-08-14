@@ -7,12 +7,16 @@ const adminRouter = require('./routers/adminRouter');
 const userRouter = require('./routers/userRouter');
 const orderRouter = require('./routers/orderRouter');
 
-const {rootDirectory} = require("./utils/root-directory");
-const usersService = require('./services/usersService');
-const {mongoConnect} = require('./data/mongodb-database');
 const productsRepository = require('./data/repositories/productsRepository');
 const usersRepository = require('./data/repositories/usersRepository');
 const cartRepository = require('./data/repositories/cartRepository');
+import ordersRepository from './data/repositories/ordersRepository';
+
+const usersService = require('./services/usersService');
+
+const {rootDirectory} = require("./utils/root-directory");
+const {mongoConnect} = require('./data/mongodb-database');
+
 
 const app = express();
 
@@ -47,7 +51,8 @@ mongoConnect()
 		productsRepository.setDb(db);
 		usersRepository.setDb(db);
 		cartRepository.setDb(db);
-		return usersService.getRootUserDetails()
+		ordersRepository.setDb(db);
+		return usersService.getRootUserDetails();
 	})
 	.then((user: any) => {
 		app.set('user', user);

@@ -1,11 +1,11 @@
-const ordersRepository = require('../data/repositories/ordersRepository');
+import ordersRepository from '../data/repositories/ordersRepository';
 const ordersService = require('../services/ordersService');
 
 module.exports = {
     ordersOverview
 }
 
-async function ordersOverview(req, res) {
+async function ordersOverview(req: any, res: any) {
     const userId = req.app.get('user').id;
     const orders = await ordersRepository.fetchUserOrders(userId);
     const viewModel = await ordersService.createOrdersViewModel(orders)

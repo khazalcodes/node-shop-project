@@ -36,8 +36,6 @@ async function addProductToCart(userId: string, product: Product) {
         }
     ));
 
-    console.log(result);
-
     if (err) console.log(err);
 
     return result

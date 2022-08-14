@@ -50,7 +50,6 @@ async function _createRootUser() {
 
     if (err) console.log(err);
 
-    console.log(result);
     const user = await usersCollection.findOne({ _id: result.insertedId })
 
     return user

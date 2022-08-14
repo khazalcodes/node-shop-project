@@ -2,9 +2,11 @@ import {CartOverviewViewModel} from "../viewmodels/CartOverviewViewModel";
 import {Cart} from "../data/models/Cart";
 import {ProductLine} from "../data/models/ProductLine";
 import {CartLineViewModel} from "../viewmodels/CartLineViewModel";
+import {ObjectId} from "mongodb";
 
 module.exports = {
     createCartOverviewViewModel,
+    deserializeCartLinesInFormSubmission,
 }
 
 function createCartOverviewViewModel(cart: Cart): CartOverviewViewModel {
@@ -19,6 +21,12 @@ function createCartOverviewViewModel(cart: Cart): CartOverviewViewModel {
         hasCartLines: cartLineViewModels.length > 0,
         sumTotal: _sumCartLineViewModelsTotalPrices(cartLineViewModels)
     }
+}
+
+function deserializeCartLinesInFormSubmission(cartLines: any) {
+    const parsedCartLines = JSON.parse(cartLines);
+    parsedCartLines.forEach((cl: any) => cl.productId = new ObjectId(cl.productId));
+    return parsedCartLines;
 }
 
 function _convertCartLinesToCartLineViewModels(cartLines: {[key: string]: ProductLine}): CartLineViewModel[] {
