@@ -1,6 +1,6 @@
 import {CartOverviewViewModel} from "../viewmodels/CartOverviewViewModel";
 import {Cart} from "../data/models/Cart";
-import {ProductLine} from "../data/models/ProductLine";
+import {CartLine} from "../data/models/CartLine";
 import {CartLineViewModel} from "../viewmodels/CartLineViewModel";
 import {ObjectId} from "mongodb";
 
@@ -24,12 +24,14 @@ function createCartOverviewViewModel(cart: Cart): CartOverviewViewModel {
 }
 
 function deserializeCartLinesInFormSubmission(cartLines: any) {
+    console.log(cartLines)
     const parsedCartLines = JSON.parse(cartLines);
+    console.log(parsedCartLines)
     parsedCartLines.forEach((cl: any) => cl.productId = new ObjectId(cl.productId));
     return parsedCartLines;
 }
 
-function _convertCartLinesToCartLineViewModels(cartLines: {[key: string]: ProductLine}): CartLineViewModel[] {
+function _convertCartLinesToCartLineViewModels(cartLines: {[key: string]: CartLine}): CartLineViewModel[] {
     const cartLineViewModels: CartLineViewModel[] = []
 
     let cl : any

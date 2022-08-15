@@ -1,8 +1,9 @@
-import {ProductLine} from "./ProductLine";
 import {ObjectId} from "mongodb";
+import {OrderLine} from "./OrderLine";
 
 export type Order = {
+    _id: ObjectId;
     userId: ObjectId;
-    orderLines: ProductLine[]
+    orderLines: OrderLine[]
     timestamp: Date
 }

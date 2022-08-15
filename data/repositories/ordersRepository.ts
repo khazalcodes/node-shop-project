@@ -1,4 +1,5 @@
 import {Collection, Db, ObjectId} from "mongodb";
+import {Order} from "../models/Order";
 const to = require('await-to-js').default;
 
 export default {
@@ -31,7 +32,7 @@ async function createOrder(userId: string, cartLinesArray: any[]) {
     return result
 }
 
-async function fetchUserOrders(userId: string): Promise<Object[]> {
+async function fetchUserOrders(userId: string): Promise<Order[]> {
     let err, result;
 
     const query = { userId: new ObjectId(userId) };

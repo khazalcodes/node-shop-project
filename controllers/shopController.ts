@@ -43,7 +43,7 @@ async function completeOrder(req: any, res: any) {
 async function addProductToCart(req: any, res: any) {
 	const userId = req.app.get('user').id;
 	const product = req.body;
-
+	product.price = parseFloat(product.price)
 	await cartRepository.addProductToCart(userId, product);
 	res.redirect('/');
 }
