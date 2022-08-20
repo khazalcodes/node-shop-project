@@ -6,6 +6,7 @@ const shopRouter = require('./routers/shopRouter');
 const adminRouter = require('./routers/adminRouter');
 const userRouter = require('./routers/userRouter');
 const orderRouter = require('./routers/orderRouter');
+const authenticationRouter = require('./routers/authenticationRouter');
 
 const productsRepository = require('./data/repositories/productsRepository');
 const usersRepository = require('./data/repositories/usersRepository');
@@ -37,6 +38,7 @@ app.use('/shop', shopRouter);
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
+app.use('/login', authenticationRouter);
 
 app.get('/500', (req: any, res: any) => {
 	res.status(500).render('500', {docTitle: 'An error has occurred!'})

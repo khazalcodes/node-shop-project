@@ -16,18 +16,23 @@ header.main-header
 				a(href="/admin/add-product" class=(path === '/admin/add-product' ? 'active' : '')) Add Product
 			li.main-header__item
 				a(href="/admin/products-overview" class=(path === '/admin/products-overview' ? 'active' : '')) Admin products 
+		ul.main-header__item-list
+			li.main-header__item
+				a(href="/login" class=(path === '/login' ? 'active' : '')) Login
 
-nav.mobile-nav
-	ul.mobile-nav__item-list
-		li.mobile-nav__item
-			a(href="/shop" class=(path === '/shop' ? 'active' : '')) Shop 
-		li.mobile-nav__item
-			a(href="/shop/products" class=(path === '/shop/products' ? 'active' : '')) Products 
-		li.mobile-nav__item
-			a(href="/shop/cart" class=(path === '/shop/cart' ? 'active' : '')) Cart 
-		li.mobile-nav__item
-			a(href="/user/orders-overview" class=(path === '/user/orders' ? 'active' : '')) Orders
-		li.mobile-nav__item
-			a(href="/admin/add-product" class=(path === '/admin/add-product' ? 'active' : '')) Add Product
-		li.mobile-nav__item
-			a(href="/admin/products-overview" class=(path === '/admin/products-overview' ? 'active' : '')) Admin products 
+	nav.mobile-nav
+		ul.mobile-nav__item-list
+			li.mobile-nav__item
+				a(href="/shop" class=(path === '/shop' ? 'active' : '')) Shop
+			li.mobile-nav__item
+				a(href="/shop/products" class=(path === '/shop/products' ? 'active' : '')) Products
+			li.mobile-nav__item
+				a(href="/shop/cart" class=(path === '/shop/cart' ? 'active' : '')) Cart
+			li.mobile-nav__item
+				a(href="/user/orders-overview" class=(path === '/user/orders' ? 'active' : '')) Orders
+			li.mobile-nav__item
+				a(href="/admin/add-product" class=(path === '/admin/add-product' ? 'active' : '')) Add Product
+			li.mobile-nav__item
+				a(href="/admin/products-overview" class=(path === '/admin/products-overview' ? 'active' : '')) Admin products
+			li.mobile-nav__item
+				a(href="/login" class=(path === '/login' ? 'active' : '')) Login
