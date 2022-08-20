@@ -35,6 +35,7 @@ async function completeOrder(req: any, res: any) {
 	const userId = req.app.get('user').id;
 	const cartLines = cartService.deserializeCartLinesInFormSubmission(req.body.cartLines)
 
+	await cartRepository.emptyCart(userId);
 	await ordersRepository.createOrder(userId, cartLines);
 
 	res.redirect('/user/orders-overview')

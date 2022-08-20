@@ -24,7 +24,6 @@ async function addProduct (product) {
 
 	if (err) console.log(err);
 
-	console.log(result)
 	return result
 }
 

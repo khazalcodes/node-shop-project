@@ -1,11 +1,12 @@
 import {Cart} from "../models/Cart";
-import {Collection, Db} from "mongodb";
 import {Product} from "../models/Product";
+import {Collection, Db, UpdateResult} from "mongodb";
 
 const mongodb = require('mongodb')
 const to = require('await-to-js').default;
 
 module.exports = {
+    emptyCart,
     fetchCart,
     addProductToCart,
     removeProductFromCart,
@@ -41,12 +42,12 @@ async function addProductToCart(userId: string, product: Product) {
     return result
 }
 
-async function removeProductFromCart(userId: string, productId: string): Promise<Cart> {
+async function removeProductFromCart(userId: string, productId: string): Promise<UpdateResult> {
     let err, cart;
     const query = { _id: new mongodb.ObjectId(userId) };
     const cartLineHandle = `cart.cartLines.${productId}`;
 
-    [err, cart] =  await to(usersCollection.updateOne(
+    [err, cart] = await to(usersCollection.updateOne(
         query,
         { $unset: { [`${cartLineHandle}`]: 1 }, }
     ));
@@ -56,9 +57,18 @@ async function removeProductFromCart(userId: string, productId: string): Promise
     return cart;
 }
 
+async function emptyCart(userId: string): Promise<UpdateResult> {
+    let err, result;
+    const query = { _id: new mongodb.ObjectId(userId) };
+
+    [err, result] = await to(usersCollection.updateOne(query, { $unset: { 'cart.cartLines': 1 } }))
+
+    if (err) throw err;
+
+    return result
+}
 
 async function fetchCart(userId: string): Promise<Cart> {
-    console.log(userId)
     const query = { _id: new mongodb.ObjectId(userId) };
     const options = { projection: { cart: 1, _id: 0 } }
 

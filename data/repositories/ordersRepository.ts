@@ -27,8 +27,6 @@ async function createOrder(userId: string, cartLinesArray: any[]) {
 
     if (err) console.log(err)
 
-    console.log(userId);
-
     return result
 }
 
@@ -40,7 +38,6 @@ async function fetchUserOrders(userId: string): Promise<Order[]> {
 
     if (err) console.log(err)
 
-    console.log(result)
 
     return result;
 }

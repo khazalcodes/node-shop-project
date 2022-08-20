@@ -24,9 +24,7 @@ function createCartOverviewViewModel(cart: Cart): CartOverviewViewModel {
 }
 
 function deserializeCartLinesInFormSubmission(cartLines: any) {
-    console.log(cartLines)
     const parsedCartLines = JSON.parse(cartLines);
-    console.log(parsedCartLines)
     parsedCartLines.forEach((cl: any) => cl.productId = new ObjectId(cl.productId));
     return parsedCartLines;
 }

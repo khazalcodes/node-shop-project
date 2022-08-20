@@ -41,7 +41,6 @@ function _convertOrdersToOrderViewModels(orders: Order[]) {
 function _convertOrderLinesToOrderLineViewModels(orderLines: OrderLine[]) {
     const orderViewModels: any = []
 
-    console.log(orderLines)
     orderLines.forEach(ol => {
         const viewModel = new OrderLineViewModel();
 
