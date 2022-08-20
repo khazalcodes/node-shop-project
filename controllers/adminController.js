@@ -11,8 +11,7 @@ module.exports = {
 }
 
 async function deleteProduct(req, res) {
-	const id = parseInt(req.body.id);
-	await productsRepository.deleteProduct(id);
+	await productsRepository.deleteProduct(req.body.id);
 	res.redirect('/');
 }
 
@@ -40,9 +39,9 @@ async function postEditProductForm(req, res) {
 async function productsOverview(req, res) {
 	const docTitle = "Admin | Products overview";
 	const path = "/admin/products-overview";
-	const userId = req.app.get('user').id
+	const authorId = req.app.get('user').id
 
-	const products = await productsRepository.fetchAllUserProducts(userId);
+	const products = await productsRepository.fetchAllUserProducts(authorId);
 	const viewModel = productsService.createUserProductsOverviewViewModel(docTitle, path, products)
 
 	res.render('admin/products-overview', viewModel);

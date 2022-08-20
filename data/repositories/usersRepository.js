@@ -1,21 +1,23 @@
-const {PrismaClient} = require('@prisma/client')
+const mongodb = require('mongodb')
 const to = require('await-to-js').default;
-
-
-const prismaClient = new PrismaClient({
-    rejectOnNotFound: true
-})
 
 module.exports = {
     getRootUser,
-    getUser,
+    setDb,
 }
 
+let db;
+let usersCollection;
+
+function setDb(mongoDbInstance) {
+    db = mongoDbInstance;
+    usersCollection = db.collection('users');
+}
 
 async function getRootUser() {
     let err, user;
 
-    [err, user] = await to(getUser(parseInt(process.env.ROOT_USER_ID)))
+    [err, user] = await to(_getUser(process.env.ROOT_USER_ID))
 
     if (err) {
         console.log(err);
@@ -25,27 +27,30 @@ async function getRootUser() {
     return user;
 }
 
-async function getUser(id) {
-    return prismaClient.user.findUnique({
-        where: {
-            id: id
-        },
-        include: {
-            cart: true
-        }
-    });
+async function _getUser(id) {
+    let err, user;
+    [err, user] = await to(usersCollection.findOne({ _id: new mongodb.ObjectId(id) }))
+
+    if (err) console.log(err);
+
+    user.id = user._id;
+
+    return user;
 }
 
 async function _createRootUser() {
-    const rootUser = await prismaClient.user.create({
-        data: {
-            firstName: 'Root',
-            lastName: 'Toor',
-            emailAddress: 'root@toor.ug',
-        }
-    })
 
-    if (rootUser.id !== 1) process.env.ROOT_USER_ID = rootUser.id;
+    let err, result;
+    [err, result] = await to(usersCollection.insertOne({
+        firstName: 'Root',
+        lastName: 'Beer',
+        emailAddress: 'root@beer.biz',
+        userName: 'ToBeDecided'
+    }))
 
-    return rootUser;
+    if (err) console.log(err);
+
+    const user = await usersCollection.findOne({ _id: result.insertedId })
+
+    return user
 }

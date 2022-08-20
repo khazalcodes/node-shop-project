@@ -1,8 +1,6 @@
 const {PrismaClient} = require('@prisma/client')
 const to = require('await-to-js').default;
 
-
-
 const prismaClient = new PrismaClient({
     rejectOnNotFound: true
 })

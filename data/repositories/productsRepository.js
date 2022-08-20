@@ -1,9 +1,5 @@
-const {PrismaClient} = require('@prisma/client')
+const mongodb = require('mongodb')
 const to = require('await-to-js').default;
-
-const prismaClient = new PrismaClient({
-	rejectOnNotFound: true
-})
 
 module.exports = {
 	addProduct,
@@ -11,81 +7,66 @@ module.exports = {
 	editProduct,
 	fetchAllUserProducts,
 	fetchProduct,
+	setDb
+}
+
+let db;
+let productsCollection;
+
+function setDb(mongoDbInstance) {
+	db = mongoDbInstance;
+	productsCollection = db.collection('products');
 }
 
 async function addProduct (product) {
-	return prismaClient.product.create({
-		data: {
-			title: product.title,
-			price: product.price,
-			imageUrl: product.imageUrl,
-			description: product.description,
-			authorId: product.authorId,
-			orderLines: {},
-			cartLines: {},
-		}
-	})
+	let err, result;
+	[err, result] = await to(productsCollection.insertOne(product));
+
+	if (err) console.log(err);
+
+	return result
 }
 
 async function deleteProduct(id) {
-	let err, deletedProduct;
-	[err, deletedProduct] = await to(prismaClient.product.delete({
-		where: {
-			id: id
-		},
-	}));
+	let err, result;
+	[err, result] = await to(productsCollection.deleteOne({_id: new mongodb.ObjectId(id)}));
 
-	if (err) {
-		console.log(err);
-		return undefined;
-	}
+	if (err) console.log(err);
 
-	return deletedProduct;
+	return result
 }
 
 async function editProduct (editedProduct) {
-	let err, product;
-	[err, product] = await to(prismaClient.product.update({
-		where: {
-			id: editedProduct.id
-		},
-		data: {
-			title: editedProduct.title,
-			price: editedProduct.price,
-			imageUrl: editedProduct.imageUrl,
-			description: editedProduct.description,
-		}
-	}));
+	let err, result;
+	[err, result] = await to(
+		productsCollection.updateOne(
+			{ _id: new mongodb.ObjectId(editedProduct.id) },
+			{
+				$set: {
+					'title': editedProduct.title,
+					'imageUrl': editedProduct.imageUrl,
+					'price': editedProduct.price,
+					'description': editedProduct.description,
+				}
+			}));
 
-	if (err) {
-		console.log(err);
-		product = undefined;
-	}
+	if (err) console.log(err);
 
-	return product
+	return result;
 }
 
-async function fetchAllUserProducts(userId) {
-	return prismaClient.product.findMany({
-		where: {
-			authorId: userId
-		}
-	})
-}
+async function fetchAllUserProducts(authorId) {
+	const products = await productsCollection.find({ authorId:  new mongodb.ObjectId(authorId) }).toArray();
+	products.forEach(p => p.id = p._id)
 
+	return products
+}
 
 async function fetchProduct(productId) {
 	let err, product;
-	[err, product] = await to(prismaClient.product.findUnique({
-		where: {
-			id: productId
-		}
-	}));
+	[err, product] = await to(productsCollection.find({ _id: new mongodb.ObjectId(productId) }))
 
-	if (err) {
-		console.log(err);
-		product = null;
-	}
+	if (err) console.log(err);
 
-	return product;
+	return product
 }

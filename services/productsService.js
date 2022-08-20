@@ -27,7 +27,6 @@ function createNewProductViewModel(rawProductInfo, authorId) {
 function createUserProductsOverviewViewModel(docTitle, path, products) {
     const viewModel = new ProductsOverviewViewModel();
 
-
     viewModel.docTitle = docTitle;
     viewModel.path = path;
     viewModel.products = _convertProductsToProductViewModels(products);
@@ -61,10 +60,11 @@ function createEditProductFormViewModel(product) {
     return viewModel
 }
 
+// figure out how to do both parseInt and send back object depending on db for edit post
 function createProductViewModel(rawProductInfo) {
     const viewModel = new ProductViewModel()
 
-    viewModel.id = parseInt(rawProductInfo.id);
+    viewModel.id = rawProductInfo.id;
     viewModel.title = rawProductInfo.title;
     viewModel.imageUrl = rawProductInfo.imageUrl;
     viewModel.description = rawProductInfo.description;
@@ -86,11 +86,11 @@ function createProductDetailsViewModel(rawProductInfo) {
 }
 
 function _convertProductsToProductViewModels(products) {
-    const productViewModels = {};
+    const productViewModels = [];
 
     products.forEach(p => {
         const viewModel = createProductViewModel(p);
-        productViewModels[viewModel.id] = viewModel
+        productViewModels.push(viewModel)
     })
 
     return productViewModels;

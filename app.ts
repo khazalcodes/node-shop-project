@@ -7,29 +7,29 @@ const adminRouter = require('./routers/adminRouter');
 const userRouter = require('./routers/userRouter');
 const orderRouter = require('./routers/orderRouter');
 
-const productsHub = require("./pub-sub-messaging/hubs/productsHub");
-const {rootDirectory} = require("./utils/root-directory");
+const productsRepository = require('./data/repositories/productsRepository');
+const usersRepository = require('./data/repositories/usersRepository');
+const cartRepository = require('./data/repositories/cartRepository');
+import ordersRepository from './data/repositories/ordersRepository';
+
 const usersService = require('./services/usersService');
+
+const {rootDirectory} = require("./utils/root-directory");
+const {mongoConnect} = require('./data/mongodb-database');
+
 
 const app = express();
 
 app.set('view engine', 'pug');
 app.set('views', 'views');
 
-usersService.getRootUserDetails()
-	.then(user => {
-		app.set('user', user);
-	})
-	.catch(err => console.log(err));
-
-productsHub.bindSubscribers();
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(rootDirectory, 'public')));
 
-app.get('/', (req, res) => {
+app.get('/', (req: any, res: any) => {
 	res.redirect('/shop/products')
 })
 
@@ -38,12 +38,25 @@ app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
 
-app.get('/500', (req, res) => {
+app.get('/500', (req: any, res: any) => {
 	res.status(500).render('500', {docTitle: 'An error has occurred!'})
 });
 
-app.use((req, res) => {
+app.use((req: any, res: any) => {
 	res.status(404).render('404', {docTitle: "Page not found"})
 })
 
-app.listen(3000);
+mongoConnect()
+	.then((db: any) => {
+		productsRepository.setDb(db);
+		usersRepository.setDb(db);
+		cartRepository.setDb(db);
+		ordersRepository.setDb(db);
+		return usersService.getRootUserDetails();
+	})
+	.then((user: any) => {
+		app.set('user', user);
+		app.listen(3000)
+		console.log('App listening on port 3000!');
+	})
+	.catch((err: any) => console.log(err));
