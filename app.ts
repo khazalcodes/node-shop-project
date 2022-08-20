@@ -38,7 +38,7 @@ app.use('/shop', shopRouter);
 app.use('/admin', adminRouter);
 app.use('/user', userRouter);
 app.use('/order', orderRouter);
-app.use('/login', authenticationRouter);
+app.use('/authentication', authenticationRouter);
 
 app.get('/500', (req: any, res: any) => {
 	res.status(500).render('500', {docTitle: 'An error has occurred!'})

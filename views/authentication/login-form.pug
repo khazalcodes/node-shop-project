@@ -1,0 +1,17 @@
+extends ../layouts/main-layout
+
+block styles
+    link(rel="stylesheet", href="/css/product.css")
+    link(rel="stylesheet", href="/css/forms.css")
+
+block content
+    main
+        form.product-form(action=postPath method="POST")
+            .form-control
+                label(for="username") Username
+                input(type="text" name="username" id="username" value=username required)
+            .form-control
+                label(for="password") Password
+                input(type="text" name="password" id="password" value=password required)
+
+            button.form-control.btn(type="submit") #{submitButtonText}
